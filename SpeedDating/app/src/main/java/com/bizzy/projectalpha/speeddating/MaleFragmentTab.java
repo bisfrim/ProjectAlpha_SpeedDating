@@ -65,8 +65,8 @@ public class MaleFragmentTab extends Fragment implements RecyclerArrayAdapter.On
                 //adapter.remove(position);
                 //return true;
                 //currentAdapter = new UsernearmeParseAdapter(getActivity(), position);
-                Intent profileIntent = new Intent(getActivity(), EditProfileFragment.class);
-                profileIntent.putExtra(EditProfileFragment.EXTRA_USER_ID, adapter.getItem(position).getName());
+                Intent profileIntent = new Intent(getActivity(), UsersProfileActivity.class);
+                profileIntent.putExtra(UsersProfileActivity.EXTRA_USER_ID, adapter.getItem(position).getName());
                 MaleFragmentTab.this.startActivity(profileIntent);
 
             }

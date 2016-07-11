@@ -13,6 +13,8 @@ public class Person {
         this.sign = sign;
     }
 
+    public Person(){}
+
     private String sign;
 
     public String getFace() {

@@ -64,7 +64,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
     static final boolean DEBUG = true;
     static final String  LOG_TAG = "EditProfileFragment:";
 
-    public final static String EXTRA_USER_ID = "userId";
+
 
     private int currentAge;
     private static final String TAG = "RxValidator";

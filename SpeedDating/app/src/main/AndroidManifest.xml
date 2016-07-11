@@ -48,10 +48,12 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_user_account"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".LoginActivity"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".RegisterActivity"
-            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".RegisterActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".MessageActivity" />
         <activity
             android:name=".SettingsActivity"
@@ -60,13 +62,15 @@
         <activity
             android:name=".EditProfileFragment"
             android:label="@string/profile_edit"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".PeopleNearMeActivity"></activity>
-        <activity
-            android:name="nl.changer.polypicker.ImagePickerActivity" />
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".PeopleNearMeActivity" />
+        <activity android:name="nl.changer.polypicker.ImagePickerActivity" />
 
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".UsersProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -31,7 +31,9 @@ public class NavigationDrawerItems {
     public final static int DRAWER_ID_SETTINGS = 2;
     public final static int DRAWER_ID_MESSAGES = 3;
     public final static int DRAWER_ID_PEOPLE_NEAR_ME = 4;
-    public final static int DRAWER_ID_LOGOUT = 5;
+    public final static int DRAWER_ID_USERS_PROFILE = 5;
+    public final static int DRAWER_ID_LOGOUT = 6;
+
 
     private static Drawer mNavigationDrawer = null;
 

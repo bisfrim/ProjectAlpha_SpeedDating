@@ -328,6 +328,7 @@
     <string name="logged_in">Welcome, %1$s</string>
     <string name="action_logout">Log Out</string>
     <string name="action_login">Log In</string>
+    <string name="title_activity_other_user_profile">OtherUserProfileActivity</string>
 
 
 </resources>
