@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bizzy.projectalpha.speeddating.MainActivity">
+
+
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/profile_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/toolbar" />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar">
+
+                <FrameLayout
+                    android:id="@+id/profile_wall"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="?attr/colorPrimaryDark">
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/profile_wall"
+                    android:layout_toLeftOf="@+id/profile_photo"
+                    android:gravity="bottom"
+                    android:layout_alignBottom="@+id/profile_photo">
+
+                    <TextView
+                        android:id="@+id/edit_age"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:text="---"/>
+
+                    <TextView
+                        android:id="@+id/text_age_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:textColor="@color/alizarin"
+                        android:textSize="12sp"
+                        android:text="AGE"/>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/profile_wall"
+                    android:layout_toRightOf="@+id/profile_photo"
+                    android:gravity="bottom"
+                    android:layout_alignBottom="@+id/profile_photo">
+
+                    <ImageView
+                        android:id="@+id/user_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_gender_24_0_gray"/>
+
+                    <TextView
+                        android:id="@+id/text_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/alizarin"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="12sp"
+                        android:text="GENDER"/>
+                </LinearLayout>
+
+
+
+                <ImageView
+                    android:id="@+id/profile_photo"
+                    android:layout_below="@+id/profile_wall"
+                    android:layout_marginTop="-75dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:onClick="imageProfileClickHandler"
+                    android:src="@drawable/profile_photo_placeholder" />
+
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_below="@+id/profile_photo"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:focusable="false"
+                    android:onClick="usernameClickHandler"
+                    android:textSize="15sp"
+                    android:theme="@style/EditTextAlizarinStyle" />
+
+
+
+                <FrameLayout
+                    android:id="@+id/frame_profile_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/username">
+
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/user_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:text="Change status"
+                            android:visibility="gone"
+                            android:textColor="@color/text_color"/>
+
+                        <LinearLayout
+                            android:id="@+id/layout_status_control"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/user_description"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:divider="@drawable/divider"
+                            android:dividerPadding="5dp">
+
+                            <LinearLayout
+                                android:id="@+id/button_change_status"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:gravity="center"
+                                android:clickable="true"
+                                android:background="@drawable/selector_transparent_to_shadow">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_edit_red"/>
+                                <TextView
+                                    android:id="@+id/about_me"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:textSize="12sp"
+                                    android:singleLine="true"
+                                    android:textCursorDrawable="@null"
+                                    android:textColor="@color/text_color"
+                                    android:text="STATUS"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/button_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:gravity="center"
+                                android:clickable="true"
+                                android:background="@drawable/selector_transparent_to_shadow">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_place_red"/>
+
+                                <TextView
+                                    android:id="@+id/user_location"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:clickable="false"
+                                    android:cursorVisible="false"
+                                    android:focusable="false"
+                                    android:focusableInTouchMode="false"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_color"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/button_who_see_me"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:gravity="center"
+                                android:clickable="true"
+                                android:background="@drawable/selector_transparent_to_shadow">
+
+                                <ImageView
+                                    android:id="@+id/orientation_image"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_male_female"/>
+                                <TextView
+                                    android:id="@+id/edit_orientation"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/alizarin"
+                                    android:text="---"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_below="@+id/layout_status_control"
+                            android:id="@+id/information_wrapper"
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content">
+
+
+
+                            <LinearLayout
+                                android:id="@+id/layout_divider"
+                                android:layout_width="1dp"
+                                android:layout_height="40dp"
+                                android:orientation="vertical"
+                                android:layout_centerInParent="true" />
+
+
+
+                        </RelativeLayout>
+
+
+
+                        <HorizontalScrollView
+                            android:id="@+id/hori_scroll_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/md_white_1000"
+                            android:fillViewport="false"
+                            android:foregroundGravity="left"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            android:layout_below="@+id/information_wrapper">
+
+
+                            <LinearLayout
+                                android:id="@+id/selected_photos_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="left"
+                                android:animateLayoutChanges="true"
+                                android:gravity="left"
+                                android:orientation="horizontal"
+                                android:visibility="visible" >
+
+                                <!-- images will be added dynamicall to this layout -->
+
+
+                            </LinearLayout>
+
+                        </HorizontalScrollView>
+
+                    </RelativeLayout>
+
+
+
+                </FrameLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+            </RelativeLayout>
+
+            <!--<ToggleButton
+                android:id="@+id/edit_content_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/relativeLayout"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/edit_btn_toggle"
+                android:clickable="true"
+                android:contentDescription="Edit image icon"
+                android:scaleType="fitXY"
+                android:textOff=""
+                android:textOn="" /> -->
+
+        </RelativeLayout>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <!--<android.support.design.widget.FloatingActionButton
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_image_edit"
+        app:backgroundTint="@color/alizarin"
+        app:borderWidth="0dp"
+        app:fabSize="normal" /> -->
+
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/right_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        fab:fab_addButtonColorNormal="@color/alizarin"
+        fab:fab_addButtonColorPressed="@color/light_text_color"
+        fab:fab_addButtonPlusIconColor="@color/light_text_color"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_image_white"
+            fab:fab_colorNormal="@color/alizarin"
+            fab:fab_colorPressed="@color/light_text_color"
+            fab:fab_title="Add image" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_image_edit"
+            fab:fab_colorNormal="@color/alizarin"
+            fab:fab_colorPressed="@color/light_text_color"
+            fab:fab_title="Edit profile" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+</android.support.design.widget.CoordinatorLayout>

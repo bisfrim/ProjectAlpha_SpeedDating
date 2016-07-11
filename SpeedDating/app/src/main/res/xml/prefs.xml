@@ -1,0 +1,49 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:rsb="urn:oasis:names:tc:xliff:document:1.2"
+    xmlns:sample="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="I am">
+
+        <SwitchPreference
+            android:key="switch_male_pref"
+            android:title="Male" />
+        <SwitchPreference
+            android:key="switch_female_pref"
+            android:title="Female" />
+
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Show me?">
+
+        <CheckBoxPreference
+            android:key="pref_male"
+            android:summaryOff="Off"
+            android:summaryOn="On"
+            android:title="Male" />
+
+        <CheckBoxPreference
+            android:key="pref_female"
+            android:summaryOff="Off"
+            android:summaryOn="On"
+            android:title="Female" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Age?">
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="18"
+            android:key="age_seekbar"
+            android:summary="Show Ages "
+            sample:msbp_interval="1"
+            sample:msbp_maxValue="50"
+            sample:msbp_measurementUnit="+"
+            sample:msbp_minValue="18" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

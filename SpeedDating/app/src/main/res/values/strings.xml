@@ -1,0 +1,333 @@
+<resources>
+    <string name="app_name">SpeedDating</string>
+
+    <string name="title_activity_user_account">ProjectAlpha</string>
+    <!-- Parse API keys -->
+    <string name="parse_client_key">ICMrhRnqAZoluTD1ZNBPaNftXrkDobpOYL5f4WPk</string>
+    <string name="parse_app_id">pQDso2mLpxdH3v0YDJjbehBlD50Kq5pLhex7RcMY</string>
+
+
+    <!-- Facebook AIP -->
+    <string name="facebook_app_id">1639948186265369</string>
+    <string name="login_dialog_label">LOGIN</string>
+    <string name="login_username_txt">username or email</string>
+    <string name="login_password_txt">password</string>
+    <string name="forgot_pass_label">Forgot Password?</string>
+    <string name="sign_in_btn_label">SIGN IN</string>
+    <string name="sign_up_btn_label">SIGN UP</string>
+    <string name="sign_up_dialog_label">SIGN UP</string>
+    <string name="sign_up_fullname_txt">Full name</string>
+    <string name="sign_up_username_txt">Username</string>
+    <string name="sign_up_email_txt">Email</string>
+    <string name="sign_up_pass_txt">Password</string>
+    <string name="sign_up_re_pass_txt">Re-enter Password</string>
+    <string name="register_btn_label">SIGN UP</string>
+    <string name="already_sign_label">Already have an account? Sign in</string>
+
+
+    <!-- Strings related login -->
+    <string name="error_intro">"Please "</string>
+    <string name="error_blank_username">enter a username</string>
+    <string name="error_blank_name">enter a name, </string>
+    <string name="error_blank_password">enter a password, </string>
+    <string name="error_invalid_email">"email isn't correct"</string>
+    <string name="error_blank_age">enter your age</string>
+    <string name="error_check_age">you must be 18 or greater</string>
+    <string name="error_mismatched_passwords">enter the same password twice</string>
+    <string name="error_join">", and "</string>
+    <string name="error_end">.</string>
+    <string name="progress_login">Logging you in&#8230;</string>
+    <string name="progress_signup">Signing you up&#8230;</string>
+    <string name="imge_loading">Loading image&#8230;</string>
+
+    <string name="progress_uploading">Saving photo...&#8230;</string>
+    <string name="saving_info">Saving...&#8230;</string>
+
+    <!-- Drawer Items -->
+    <string name="drawer_item_profile">Profile</string>
+    <string name="drawer_item_people_near_me">People Near Me</string>
+    <string name="drawer_item_logout">Logout</string>
+    <string name="drawer_item_users_near_me">Settings</string>
+    <string name="drawer_item_start_match">Find match</string>
+    <string name="drawer_item_messages">Messages</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--<string name="drawer_item_vip">VIP</string> -->
+
+    <string name="profile_edit">""</string>
+
+
+    <!-- Ethnicity -->
+    <string-array name="ethnicity">
+        <item>African American</item>
+        <item>Asian</item>
+        <item>Caucasian/White</item>
+        <item>East Indian</item>
+        <item>Hispanic/Latino</item>
+        <item>Middle Eastern</item>
+        <item>Native American</item>
+        <item>Pacific Islander</item>
+        <item>Other</item>
+    </string-array>
+
+
+    <!-- Nationality -->
+    <string-array name="countries" formatted="false" translatable="false">
+        <item>Various</item>
+        <item>Afghanistan</item>
+        <item>Albania</item>
+        <item>Algeria</item>
+        <item>American Samoa</item>
+        <item>Andorra</item>
+        <item>Angola</item>
+        <item>Antigua and Barbuda</item>
+        <item>Argentina</item>
+        <item>Armenia</item>
+        <item>Aruba</item>
+        <item>Australia</item>
+        <item>Austria</item>
+        <item>Azerbaijan</item>
+        <item>Bahamas</item>
+        <item>Bahrain</item>
+        <item>Bangladesh</item>
+        <item>Barbados</item>
+        <item>Belarus</item>
+        <item>Belgium</item>
+        <item>Belize</item>
+        <item>Benin</item>
+        <item>Bermuda</item>
+        <item>Bhutan</item>
+        <item>Bolivia</item>
+        <item>Bosnia and Herzegovina</item>
+        <item>Botswana</item>
+        <item>Brazil</item>
+        <item>British Virgin Islands</item>
+        <item>Brunei</item>
+        <item>Bulgaria</item>
+        <item>Burkina Faso</item>
+        <item>Burundi</item>
+        <item>Cambodia</item>
+        <item>Cameroon</item>
+        <item>Canada</item>
+        <item>Canary Islands</item>
+        <item>Cape Verde</item>
+        <item>Cayman Islands</item>
+        <item>Central African Republic</item>
+        <item>Ceuta and Melilla</item>
+        <item>Chad</item>
+        <item>Chile</item>
+        <item>China</item>
+        <item>Colombia</item>
+        <item>Comoros</item>
+        <item>Congo [DRC]</item>
+        <item>Congo [Republic]</item>
+        <item>Costa Rica</item>
+        <item>Croatia</item>
+        <item>Cuba</item>
+        <item>Curaçao</item>
+        <item>Cyprus</item>
+        <item>Czech Republic</item>
+        <item>Côte d’Ivoire</item>
+        <item>Denmark</item>
+        <item>Djibouti</item>
+        <item>Dominica</item>
+        <item>Dominican Republic</item>
+        <item>Ecuador</item>
+        <item>Egypt</item>
+        <item>El Salvador</item>
+        <item>Equatorial Guinea</item>
+        <item>Eritrea</item>
+        <item>Estonia</item>
+        <item>Ethiopia</item>
+        <item>Europe</item>
+        <item>Faroe Islands</item>
+        <item>Fiji</item>
+        <item>Finland</item>
+        <item>France</item>
+        <item>French Guiana</item>
+        <item>French Polynesia</item>
+        <item>Gabon</item>
+        <item>Gambia</item>
+        <item>Georgia</item>
+        <item>Germany</item>
+        <item>Ghana</item>
+        <item>Gibraltar</item>
+        <item>Greece</item>
+        <item>Greenland</item>
+        <item>Grenada</item>
+        <item>Guadeloupe</item>
+        <item>Guam</item>
+        <item>Guatemala</item>
+        <item>Guernsey</item>
+        <item>Guinea</item>
+        <item>Guinea-Bissau</item>
+        <item>Guyana</item>
+        <item>Haiti</item>
+        <item>Honduras</item>
+        <item>Hong Kong</item>
+        <item>Hungary</item>
+        <item>Iceland</item>
+        <item>India</item>
+        <item>Indonesia</item>
+        <item>Iran</item>
+        <item>Iraq</item>
+        <item>Ireland</item>
+        <item>Isle of Man</item>
+        <item>Israel</item>
+        <item>Italy</item>
+        <item>Jamaica</item>
+        <item>Japan</item>
+        <item>Jersey</item>
+        <item>Jordan</item>
+        <item>Kazakhstan</item>
+        <item>Kenya</item>
+        <item>Kiribati</item>
+        <item>Kuwait</item>
+        <item>Kyrgyzstan</item>
+        <item>Laos</item>
+        <item>Latin America</item>
+        <item>Latvia</item>
+        <item>Lebanon</item>
+        <item>Lesotho</item>
+        <item>Liberia</item>
+        <item>Libya</item>
+        <item>Liechtenstein</item>
+        <item>Lithuania</item>
+        <item>Luxembourg</item>
+        <item>Macau</item>
+        <item>Macedonia [FYROM]</item>
+        <item>Madagascar</item>
+        <item>Malawi</item>
+        <item>Malaysia</item>
+        <item>Mali</item>
+        <item>Malta</item>
+        <item>Marshall Islands</item>
+        <item>Martinique</item>
+        <item>Mauritania</item>
+        <item>Mauritius</item>
+        <item>Mayotte</item>
+        <item>Mexico</item>
+        <item>Micronesia</item>
+        <item>Moldova</item>
+        <item>Monaco</item>
+        <item>Mongolia</item>
+        <item>Montenegro</item>
+        <item>Morocco</item>
+        <item>Mozambique</item>
+        <item>Myanmar [Burma]</item>
+        <item>Namibia</item>
+        <item>Nepal</item>
+        <item>Netherlands</item>
+        <item>New Caledonia</item>
+        <item>New Zealand</item>
+        <item>Nicaragua</item>
+        <item>Niger</item>
+        <item>Nigeria</item>
+        <item>North Korea</item>
+        <item>Northern Mariana Islands</item>
+        <item>Norway</item>
+        <item>Oman</item>
+        <item>Pakistan</item>
+        <item>Palau</item>
+        <item>Palestine</item>
+        <item>Panama</item>
+        <item>Papua New Guinea</item>
+        <item>Paraguay</item>
+        <item>Peru</item>
+        <item>Philippines</item>
+        <item>Poland</item>
+        <item>Portugal</item>
+        <item>Puerto Rico</item>
+        <item>Qatar</item>
+        <item>Romania</item>
+        <item>Russia</item>
+        <item>Rwanda</item>
+        <item>Réunion</item>
+        <item>Saint Barthélemy</item>
+        <item>Saint Kitts and Nevis</item>
+        <item>Saint Lucia</item>
+        <item>Saint Martin</item>
+        <item>Saint Vincent and the Grenadines</item>
+        <item>Samoa</item>
+        <item>San Marino</item>
+        <item>Saudi Arabia</item>
+        <item>Senegal</item>
+        <item>Serbia</item>
+        <item>Seychelles</item>
+        <item>Sierra Leone</item>
+        <item>Singapore</item>
+        <item>Sint Maarten</item>
+        <item>Slovakia</item>
+        <item>Slovenia</item>
+        <item>Solomon Islands</item>
+        <item>Somalia</item>
+        <item>South Africa</item>
+        <item>South Korea</item>
+        <item>South Sudan</item>
+        <item>Spain</item>
+        <item>Sri Lanka</item>
+        <item>Sudan</item>
+        <item>Suriname</item>
+        <item>Swaziland</item>
+        <item>Sweden</item>
+        <item>Switzerland</item>
+        <item>Syria</item>
+        <item>São Tomé and Príncipe</item>
+        <item>Taiwan</item>
+        <item>Tanzania</item>
+        <item>Thailand</item>
+        <item>Timor-Leste</item>
+        <item>Togo</item>
+        <item>Tonga</item>
+        <item>Trinidad and Tobago</item>
+        <item>Tunisia</item>
+        <item>Turkey</item>
+        <item>Turks and Caicos Islands</item>
+        <item>U.S. Outlying Islands</item>
+        <item>U.S. Virgin Islands</item>
+        <item>Uganda</item>
+        <item>Ukraine</item>
+        <item>United Arab Emirates</item>
+        <item>United Kingdom</item>
+        <item>United States</item>
+        <item>Uruguay</item>
+        <item>Uzbekistan</item>
+        <item>Vanuatu</item>
+        <item>Venezuela</item>
+        <item>Vietnam</item>
+        <item>Western Sahara</item>
+        <item>XA</item>
+        <item>Yemen</item>
+        <item>Zambia</item>
+        <item>Zimbabwe</item>
+        <item>Åland Islands</item>
+    </string-array>
+
+
+    <string-array name="interest">
+        <item>Movies</item>
+        <item>Sports</item>
+        <item>Travelling</item>
+        <item>Music</item>
+        <item>Working out</item>
+        <item>Reading</item>
+        <item>Writting</item>
+        <item>Nothing</item>
+    </string-array>
+
+
+    <string name="todo_prompt">Enter todo details:</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="action_new">New Todo</string>
+    <string name="action_sync">Sync</string>
+    <string name="no_items">No items, click + to started adding todos.</string>
+    <string name="not_logged_in">Not logged in</string>
+    <string name="logged_in">Welcome, %1$s</string>
+    <string name="action_logout">Log Out</string>
+    <string name="action_login">Log In</string>
+
+
+</resources>

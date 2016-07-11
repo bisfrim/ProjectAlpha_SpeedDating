@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('multispinner-0.1.1.aar'))
