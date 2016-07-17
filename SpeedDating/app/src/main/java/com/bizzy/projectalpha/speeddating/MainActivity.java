@@ -93,7 +93,6 @@ import nl.changer.polypicker.utils.ImageInternalFetcher;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     protected String LOG_TAG = "MainActivity";
 
     private UserUploadedPhotos userUploadedPhotos;
@@ -123,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView text_gender;
     LinearLayout mErrorLayout;
     RelativeLayout mWaitLayout;
+
     private CharSequence mTitle;
 
     EditProfileFragment mProfileEditFragment;
@@ -181,16 +181,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mProfilePhoto = (ImageView) mProfileContentLayout.findViewById(R.id.profile_photo);
         //editInfoBtn = (FloatingActionButton)findViewById(R.id.edit_button);
         //usernameField = (EditText) findViewById(R.id.edit_nickname);
-        usernameView = (EditText) findViewById(R.id.username);
-        birthdayView = (TextView) findViewById(R.id.edit_age);
-        orientationField = (TextView) findViewById(R.id.edit_orientation);
-        userBio = (TextView) findViewById(R.id.about_me);
-        mGenderImage = (ImageView) findViewById(R.id.user_gender);
-        mOrientationImage = (ImageView)findViewById(R.id.orientation_image) ;
-        text_gender = (TextView) findViewById(R.id.text_gender);
+        usernameView = (EditText) mProfileContentLayout.findViewById(R.id.username);
+        birthdayView = (TextView) mProfileContentLayout.findViewById(R.id.edit_age);
+        orientationField = (TextView) mProfileContentLayout.findViewById(R.id.edit_orientation);
+        userBio = (TextView) mProfileContentLayout.findViewById(R.id.about_me);
+        mGenderImage = (ImageView) mProfileContentLayout.findViewById(R.id.user_gender);
+        mOrientationImage = (ImageView)mProfileContentLayout.findViewById(R.id.orientation_image) ;
+        text_gender = (TextView)mProfileContentLayout. findViewById(R.id.text_gender);
         //mGenderFemaleImage = (ImageView) findViewById(R.id.image_female);
 
-        userLoc = (TextView) findViewById(R.id.user_location);
+        userLoc = (TextView) mProfileContentLayout.findViewById(R.id.user_location);
         //streetLocation = (TextView)findViewById(R.id.street_location);
 
         getUsersLocation(userLoc); //get the user loacation when the activity starts

@@ -1,16 +1,28 @@
 package com.bizzy.projectalpha.speeddating;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.opengl.EGLDisplay;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,7 +37,13 @@ import android.widget.Toast;
 
 import com.bizzy.projectalpha.speeddating.profile_header.HeaderView;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.SaveCallback;
 import com.thomashaertel.widget.MultiSpinner;
 import com.toptoche.multiselectwidget.MultiSelectFragment;
@@ -41,11 +59,13 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import fr.quentinklein.slt.LocationTracker;
+import fr.quentinklein.slt.TrackerSettings;
 
 /**
  * This activity updates our user profile
  */
-public class EditProfileFragment extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener{
+public class EditProfileFragment extends AppCompatActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
 
     @Bind(R.id.toolbar_header_view)
     protected HeaderView toolbarHeaderView;
@@ -64,13 +84,16 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
     static final boolean DEBUG = true;
     static final String  LOG_TAG = "EditProfileFragment:";
 
-
-
+    private Context mContext;
     private int currentAge;
     private static final String TAG = "RxValidator";
     private static final String dateFormat = "dd-MM-yyyy";
     private static final SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
     private Date convertDate;
+
+    private Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    private String currentLoc;
 
 
     private Handler mHandler;
@@ -118,6 +141,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
 
         mMainActivity = new MainActivity();
 
+        mContext = EditProfileFragment.this;
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -192,6 +216,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         userBio = (EditText)findViewById(R.id.edit_bio);
         userBio.setText(mCurrentUser.getUserBio());
 
+        userLocation = (EditText)findViewById(R.id.edit_loaction);
 
         userAge = (EditText) findViewById(R.id.user_age);
 
@@ -465,12 +490,12 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
 
 
                 //Check for selected spinner item and save to parse
-                /*if(spinner.isSelected()) //this check doesn't work
+                if(spinner.isSelected()) //this check doesn't work
                 {
                     mCurrentUser.setUserEthnicity(builder.toString());
-                }*/
+                }
 
-                mCurrentUser.setUserEthnicity(builder.toString());
+                //mCurrentUser.setUserEthnicity(builder.toString());
 
                 //Save the selected widget item to parse
                 mCurrentUser.setUserInterest(multiSelectView.getSelectedItems().toString());
@@ -581,6 +606,48 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         currentDate.setTime(new Date()); //Now age
 
         return currentDate.get(Calendar.YEAR) - age.get(Calendar.YEAR);
+    }
+
+
+    protected void showInputDialog() {
+
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(EditProfileFragment.this);
+        View promptView = layoutInflater.inflate(R.layout.user_location_dialog, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditProfileFragment.this);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.user_location_change);
+        // setup a dialog window
+        //editText.setText(mCurrentUser.getNickname());
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //resultText.setText("Hello, " + editText.getText());
+                        //mCurrentUser = (User)parseUser;
+                        //editText.setText(mCurrentUser.getUsername());
+                        userLocation.setText(editText.getText());
+                        //mCurrentUser.setNickname(editText.getText().toString());
+                        //updateInfo();
+
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        alert.show();
+    }
+
+    public void userCurrentLocationClickHandler(View view) {
+        showInputDialog();
     }
 
 }
