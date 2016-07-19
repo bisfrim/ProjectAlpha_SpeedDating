@@ -14,10 +14,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -38,7 +42,14 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
+import com.yayandroid.locationmanager.LocationBaseActivity;
+import com.yayandroid.locationmanager.LocationConfiguration;
+import com.yayandroid.locationmanager.LocationManager;
+import com.yayandroid.locationmanager.constants.FailType;
+import com.yayandroid.locationmanager.constants.LogType;
+import com.yayandroid.locationmanager.constants.ProviderType;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +60,7 @@ import java.util.Locale;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class RegisterActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class RegisterActivity extends LocationBaseActivity {
     RelativeLayout mSignUpActivity;
     Intent mLoginIntent;
 
@@ -58,6 +69,12 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
+
+    private ProgressDialog locProgressDialog;
+
+    private RadioGroup radioSexGroup;
+    private RadioButton radioSexButton;
+    private boolean mMaleSelected,mFemaleSelected = false;
 
     //EditText
     protected EditText registerNickname, registerUser, registerEmail,
@@ -86,6 +103,8 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
 
         mLoginIntent = this.getIntent();
 
+        radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
+
         registerNickname = (EditText) findViewById(R.id.signup_nickname);
         registerUser = (EditText) findViewById(R.id.signup_username);
         registerEmail = (EditText) findViewById(R.id.signup_email);
@@ -93,6 +112,9 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
         register_re_pass = (EditText) findViewById(R.id.signup_re_password);
 
         register_Loc = (EditText)findViewById(R.id.register_location);
+
+        LocationManager.setLogType(LogType.GENERAL);
+        getLocation();
 
         //Age Calendar
         dateView = (EditText) findViewById(R.id.signup_birthday);
@@ -102,13 +124,6 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
 
         doValidation();
 
-        buildGoogleApiClient();
-
-        if(mGoogleApiClient!= null){
-            mGoogleApiClient.connect();
-        }
-        else
-            Toast.makeText(this, "Not connected...", Toast.LENGTH_SHORT).show();
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -134,11 +149,17 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
     @Override
     public void onPause() {
         super.onPause();
+        dismissProgress();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        if (getLocationManager().isWaitingForLocation()
+                && !getLocationManager().isAnyDialogShowing()) {
+            displayProgress();
+        }
     }
 
     public void goSigninClickHandler(View view) {
@@ -149,6 +170,7 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
 
 
     public void registerAccountClickHandler(View view) {
+        int selectedId = radioSexGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
         final String nickname = registerNickname.getText().toString().trim();
         final String username = registerUser.getText().toString().trim();
         final String email = registerEmail.getText().toString().trim();
@@ -158,11 +180,18 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
         final String userLocation = register_Loc.getText().toString().trim();
         //final String userLocation = locationZip.getText().toString().trim();
 
+        radioSexButton = (RadioButton) findViewById(selectedId);// find the radiobutton by returned id
+
         try {
             convertDate = (Date) sdf.parse(birthday); //parse the date of birth format as string (dd-mm-yyyy)
             currentAge = calculatedAge(convertDate); //calculate the parsed format from calculated method
         } catch (java.text.ParseException e) {
             e.printStackTrace();
+        }
+
+        if (radioSexGroup.getCheckedRadioButtonId() == -1){
+            Toast.makeText(RegisterActivity.this, "Opps, Please choose a gender", Toast.LENGTH_SHORT).show();
+            return;
         }
 
 /*
@@ -247,6 +276,16 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
                                     newUser.setPassword(password);
                                     newUser.setAge(currentAge);
                                     //newUser.setUserLoc(userLocation);
+
+                                    if (radioSexButton.getId() == R.id.radioMale) {
+                                        newUser.setGenderIsMale(true);
+
+                                        Log.d("RegisterActivity", radioSexButton.getText().toString());
+                                    } else if(radioSexButton.getId() == R.id.radioFemale) {
+                                        newUser.setGenderIsMale(false);
+                                        Log.d("RegisterActivity", radioSexButton.getText().toString());
+                                    }
+
                                     newUser.setGeoPoint(mParsegeoPoint);
 
                                     //myLocationZip.getAddress(userLocation);
@@ -329,57 +368,6 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
     }
 
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        try{
-
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(mLastLocation.getLatitude() , mLastLocation.getLongitude(), 1);
-
-            if(addresses.isEmpty()) {
-                register_Loc.setText("Waiting for Location");
-            }else if (mLastLocation != null || addresses.size() > 0) {
-                //register_Loc.setText("Latitude: "+ String.valueOf(mLastLocation.getLatitude())+" - Longitude: "+
-                //String.valueOf(mLastLocation.getLongitude()));
-
-                mParsegeoPoint = new ParseGeoPoint(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-
-                String cityName = addresses.get(0).getAddressLine(0);
-                String stateName = addresses.get(0).getAddressLine(1);
-                String countryName = addresses.get(0).getAddressLine(2);
-
-                register_Loc.setText(String.valueOf(stateName));
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-        Toast.makeText(this, "Connection suspended...", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "Connection Failed", Toast.LENGTH_SHORT).show();
-
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
 
 
     private void setDatePickerListener(final EditText birthday) {
@@ -514,4 +502,118 @@ public class RegisterActivity extends AppCompatActivity implements ConnectionCal
 
 
     }
+
+
+
+
+
+    @Override
+    public LocationConfiguration getLocationConfiguration() {
+        return new LocationConfiguration()
+                .keepTracking(true)
+                .askForGooglePlayServices(true)
+                .setMinAccuracy(200.0f)
+                .setWaitPeriod(ProviderType.GOOGLE_PLAY_SERVICES, 5 * 1000)
+                .setWaitPeriod(ProviderType.GPS, 10 * 1000)
+                .setWaitPeriod(ProviderType.NETWORK, 5 * 1000)
+                .setGPSMessage("Would you mind to turn GPS on?")
+                .setRationalMessage("Gimme the permission!");
+    }
+
+    @Override
+    public void onLocationFailed(int failType) {
+        dismissProgress();
+
+        switch (failType) {
+            case FailType.PERMISSION_DENIED: {
+                register_Loc.setText("Couldn't get location, because user didn't give permission!");
+                break;
+            }
+            case FailType.GP_SERVICES_NOT_AVAILABLE:
+            case FailType.GP_SERVICES_CONNECTION_FAIL: {
+                register_Loc.setText("Couldn't get location, because Google Play Services not available!");
+                break;
+            }
+            case FailType.NETWORK_NOT_AVAILABLE: {
+                register_Loc.setText("Couldn't get location, because network is not accessible!");
+                break;
+            }
+            case FailType.TIMEOUT: {
+                register_Loc.setText("Couldn't get location, and timeout!");
+                break;
+            }
+            case FailType.GP_SERVICES_SETTINGS_DENIED: {
+                register_Loc.setText("Couldn't get location, because user didn't activate providers via settingsApi!");
+                break;
+            }
+            case FailType.GP_SERVICES_SETTINGS_DIALOG: {
+                register_Loc.setText("Couldn't display settingsApi dialog!");
+                break;
+            }
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        dismissProgress();
+        setLocationText(location);
+    }
+
+
+    private void displayProgress() {
+        if (locProgressDialog == null) {
+            locProgressDialog = new ProgressDialog(this);
+            locProgressDialog.getWindow().addFlags(Window.FEATURE_NO_TITLE);
+            locProgressDialog.setMessage("Getting location...");
+        }
+
+        if (!locProgressDialog.isShowing()) {
+            locProgressDialog.show();
+        }
+    }
+
+    private void dismissProgress() {
+        if (locProgressDialog != null && locProgressDialog.isShowing()) {
+            locProgressDialog.dismiss();
+        }
+    }
+
+
+    public void setLocationText(Location location) {
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+            //String cityName = addresses.get(0).getAddressLine(0);
+            String stateName = addresses.get(0).getAddressLine(1);
+            //String countryName = addresses.get(0).getAddressLine(2);
+            String zipCode = addresses.get(0).getPostalCode();
+
+            mParsegeoPoint = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
+
+            String appendValue = location.getLatitude() + ", " + location.getLongitude() + "\n";
+
+            String newValue;
+            CharSequence current = register_Loc.getText();
+
+            if (!TextUtils.isEmpty(current)) {
+                register_Loc.getText();
+            } else {
+                register_Loc.setText(zipCode);
+            }
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
 }

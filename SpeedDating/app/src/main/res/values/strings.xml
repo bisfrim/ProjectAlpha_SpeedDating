@@ -329,6 +329,7 @@
     <string name="action_logout">Log Out</string>
     <string name="action_login">Log In</string>
     <string name="title_activity_other_user_profile">OtherUserProfileActivity</string>
+    <string name="title_activity_location_updates">LocationUpdates</string>
 
 
 </resources>

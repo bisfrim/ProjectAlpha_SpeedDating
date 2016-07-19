@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.app.LauncherActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +34,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -66,6 +69,12 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.yayandroid.locationmanager.LocationBaseActivity;
+import com.yayandroid.locationmanager.LocationConfiguration;
+import com.yayandroid.locationmanager.LocationManager;
+import com.yayandroid.locationmanager.constants.FailType;
+import com.yayandroid.locationmanager.constants.LogType;
+import com.yayandroid.locationmanager.constants.ProviderType;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,8 +90,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import fr.quentinklein.slt.LocationTracker;
-import fr.quentinklein.slt.TrackerSettings;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -91,7 +99,7 @@ import nl.changer.polypicker.ImagePickerActivity;
 import nl.changer.polypicker.utils.ImageInternalFetcher;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends LocationBaseActivity implements View.OnClickListener {
 
     protected String LOG_TAG = "MainActivity";
 
@@ -124,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout mWaitLayout;
 
     private CharSequence mTitle;
+
+    private ProgressDialog locProgressDialog;
+
+    private ArrayList<ListItem> listItem;
 
     EditProfileFragment mProfileEditFragment;
 
@@ -163,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
+        listItem=new ArrayList<>();
+
         //ButterKnife.bind(this);
         userUploadedPhotos = new UserUploadedPhotos();
 
@@ -193,7 +207,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userLoc = (TextView) mProfileContentLayout.findViewById(R.id.user_location);
         //streetLocation = (TextView)findViewById(R.id.street_location);
 
-        getUsersLocation(userLoc); //get the user loacation when the activity starts
+        //getUsersLocation(userLoc); //get the user loacation when the activity starts
+
+        LocationManager.setLogType(LogType.GENERAL);
+        getLocation();
 
 
         //Initialize toolbar
@@ -552,6 +569,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
 
+        if (getLocationManager().isWaitingForLocation()
+                && !getLocationManager().isAnyDialogShowing()) {
+            displayProgress();
+        }
+
         ParseFile photoFile = getUserUploadedPhotos().getPhotoFile();
         if (photoFile != null) {
             imagePreview.setParseFile(photoFile);
@@ -575,6 +597,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        dismissProgress();
         Log.d("main111", "onPause");
     }
 
@@ -714,8 +737,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int htpx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, getResources().getDisplayMetrics());
             thumbnail.setLayoutParams(new FrameLayout.LayoutParams(wdpx, htpx));
 
+
             File aFile = new File(getRealPathFromURI(uri)); //Get the path of image URI
             //thisList.add(String.valueOf(uri.getPath().length()));
+
+            //ListItem item=new ListItem();
+            //item.setName(aFile.getName());
+            //item.setPath(aFile.getAbsolutePath());
+            //listItem.add(item);
 
             aFile.listFiles(); //this only gets the first image (we want to get all images selected in a array or something similar)
             try {
@@ -726,7 +755,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //byte[] bFile = new byte[(int) aFile.length()];
 
-            userPhotoFiles = new ParseFile("user_photo.jpg", image); //name the file as you wish, parse grabs the image as a byte
+            userPhotoFiles = new ParseFile("user_photo.jpg", image); //name the file as you wish, parse saves the image as a byte
             userPhotoFiles.saveInBackground(new SaveCallback() {
 
                 public void done(ParseException e) {
@@ -879,7 +908,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return buffer.toByteArray();
     }
 
-    public void getUsersLocation(final TextView showLocation) {
+ /*   public void getUsersLocation(final TextView showLocation) {
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -931,5 +960,111 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             };
             tracker.startListening();
         }
+    }*/
+
+
+
+
+    @Override
+    public LocationConfiguration getLocationConfiguration() {
+        return new LocationConfiguration()
+                .keepTracking(true)
+                .askForGooglePlayServices(true)
+                .setMinAccuracy(200.0f)
+                .setWaitPeriod(ProviderType.GOOGLE_PLAY_SERVICES, 5 * 1000)
+                .setWaitPeriod(ProviderType.GPS, 10 * 1000)
+                .setWaitPeriod(ProviderType.NETWORK, 5 * 1000)
+                .setGPSMessage("Would you mind to turn GPS on?")
+                .setRationalMessage("Gimme the permission!");
     }
+
+    @Override
+    public void onLocationFailed(int failType) {
+        dismissProgress();
+
+        switch (failType) {
+            case FailType.PERMISSION_DENIED: {
+                userLoc.setText("Couldn't get location, because user didn't give permission!");
+                break;
+            }
+            case FailType.GP_SERVICES_NOT_AVAILABLE:
+            case FailType.GP_SERVICES_CONNECTION_FAIL: {
+                userLoc.setText("Couldn't get location, because Google Play Services not available!");
+                break;
+            }
+            case FailType.NETWORK_NOT_AVAILABLE: {
+                userLoc.setText("Couldn't get location, because network is not accessible!");
+                break;
+            }
+            case FailType.TIMEOUT: {
+                userLoc.setText("Couldn't get location, and timeout!");
+                break;
+            }
+            case FailType.GP_SERVICES_SETTINGS_DENIED: {
+                userLoc.setText("Couldn't get location, because user didn't activate providers via settingsApi!");
+                break;
+            }
+            case FailType.GP_SERVICES_SETTINGS_DIALOG: {
+                userLoc.setText("Couldn't display settingsApi dialog!");
+                break;
+            }
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        dismissProgress();
+        setTextLocation(location);
+    }
+
+
+    private void displayProgress() {
+        if (locProgressDialog == null) {
+            locProgressDialog = new ProgressDialog(this);
+            locProgressDialog.getWindow().addFlags(Window.FEATURE_NO_TITLE);
+            locProgressDialog.setMessage("Getting location...");
+        }
+
+        if (!locProgressDialog.isShowing()) {
+            locProgressDialog.show();
+        }
+    }
+
+    private void dismissProgress() {
+        if (locProgressDialog != null && locProgressDialog.isShowing()) {
+            locProgressDialog.dismiss();
+        }
+    }
+
+
+    public void setTextLocation(Location location) {
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+            //String cityName = addresses.get(0).getAddressLine(0);
+            String stateName = addresses.get(0).getAddressLine(1);
+            //String countryName = addresses.get(0).getAddressLine(2);
+
+            //String appendValue = location.getLatitude() + ", " + location.getLongitude() + "\n";
+
+            String newValue;
+            CharSequence current = userLoc.getText();
+
+            if (!TextUtils.isEmpty(current)) {
+                userLoc.getText();
+            } else {
+                userLoc.setText(stateName);
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
