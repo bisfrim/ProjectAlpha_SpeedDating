@@ -55,11 +55,11 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.8.2'
     compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
     compile 'com.github.jkwiecien:EasyImage:1.1.0'
-    compile 'com.google.android.gms:play-services-identity:9.0.1'
-    compile 'com.google.android.gms:play-services-plus:9.0.1'
-    compile 'com.google.android.gms:play-services-gcm:9.0.1'
-    compile 'com.google.android.gms:play-services-maps:9.0.1'
-    compile 'com.google.android.gms:play-services-location:9.0.1'
+    compile 'com.google.android.gms:play-services-identity:9.2.1'
+    compile 'com.google.android.gms:play-services-plus:9.2.1'
+    compile 'com.google.android.gms:play-services-gcm:9.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.2.1'
+    compile 'com.google.android.gms:play-services-location:9.2.1'
     compile 'com.pavelsikun:material-seekbar-preference:0.12.1'
     compile 'org.parceler:parceler-api:1.0.4'
     compile 'com.google.code.gson:gson:2.5'
@@ -77,7 +77,7 @@ dependencies {
     compile 'com.jude:easyrecyclerview:4.0.2'
     compile 'com.jude:rollviewpager:1.2.9'
 
-    compile 'com.yayandroid:LocationManager:1.1.1'
+    compile 'com.yayandroid:LocationManager:1.1.2'
 
     compile project(path: ':ParseUI-Widget')
 }

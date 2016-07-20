@@ -287,7 +287,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 .setRationaleMessage("we need permission for read camera and storage")
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
                 .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        Manifest.permission.CAMERA) // Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
                 .check();
 
         //Fab button for adding images and editing user profile
@@ -964,18 +964,27 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
 
 
-
+    ///Check LocationConfiguration documentation for descriptions on required methods to use
     @Override
     public LocationConfiguration getLocationConfiguration() {
         return new LocationConfiguration()
                 .keepTracking(true)
                 .askForGooglePlayServices(true)
+                .askForSettingsApi(true)
+                .askForEnableGPS(true)
                 .setMinAccuracy(200.0f)
+                .setTimeInterval(10 * 1000) //time interval to get for location updates, this is in milliseconds
                 .setWaitPeriod(ProviderType.GOOGLE_PLAY_SERVICES, 5 * 1000)
                 .setWaitPeriod(ProviderType.GPS, 10 * 1000)
                 .setWaitPeriod(ProviderType.NETWORK, 5 * 1000)
-                .setGPSMessage("Would you mind to turn GPS on?")
-                .setRationalMessage("Gimme the permission!");
+                .setGPSMessage("GPS Permission required")
+                .setRationalMessage("We need permission for GPS?, If you reject permission, you cannot use this service\n\n" +
+                        "Please turn on permissions at [Setting] > [Permission]");
+
+//we need permission for read camera and storage
+        //If you reject permission,you can not use this service
+
+        //Please turn on permissions at [Setting] > [Permission]"
     }
 
     @Override

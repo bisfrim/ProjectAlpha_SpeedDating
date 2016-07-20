@@ -517,7 +517,8 @@ public class RegisterActivity extends LocationBaseActivity {
                 .setWaitPeriod(ProviderType.GPS, 10 * 1000)
                 .setWaitPeriod(ProviderType.NETWORK, 5 * 1000)
                 .setGPSMessage("Would you mind to turn GPS on?")
-                .setRationalMessage("Gimme the permission!");
+                .setRationalMessage("We need permission for GPS?, If you reject permission, you cannot use this service\n\n" +
+                        "Please turn on permissions at [Setting] > [Permission]");
     }
 
     @Override
