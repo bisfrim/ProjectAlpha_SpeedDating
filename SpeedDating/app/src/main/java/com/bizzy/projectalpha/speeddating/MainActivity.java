@@ -92,6 +92,7 @@ import java.util.Locale;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 import nl.changer.polypicker.Config;
@@ -286,6 +287,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage("we need permission for read camera and storage")
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setGotoSettingButtonText("allow permission")
                 .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA) // Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
                 .check();
@@ -311,10 +313,10 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                         Bundle args = new Bundle();
                         if(args == null){
                             //args = new Bundle();
-                            args.putInt(EditProfileFragment.ARG_AGE, (Integer) mCurrentUser.getAge());
+                            args.putInt(EditProfileFragment.ARG_AGE, mCurrentUser.getAge());
                             //mProfileEditFragment.setArguments(args);
                         } else {
-                            args.putInt(EditProfileFragment.ARG_AGE, (Integer) mCurrentUser.getAge());
+                            args.putInt(EditProfileFragment.ARG_AGE, mCurrentUser.getAge());
                         }
                         //getFragmentManager().beginTransaction().setCustomAnimations(R.animator.slide_in_bottom, R.animator.slide_in_top).replace(R.id.profile_main_layout, mProfileEditFragment).commit();
                         Intent editProfileIntent = new Intent(MainActivity.this, EditProfileFragment.class);
@@ -620,7 +622,9 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     }
 
     private void selectProfileOptions() {
-        EasyImage.openChooser(this, "Pick source");
+        EasyImage.openChooserWithDocuments(this, "Pick source", 0);
+        //EasyImage.openChooserWithGallery(this, "Pick source", 0);
+
     }
 
     @Override
@@ -650,28 +654,30 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             }
         }
 
-        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new EasyImage.Callbacks() {
+        EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
-            public void onImagePickerError(Exception e, EasyImage.ImageSource source) {
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
                 //Some error handling
             }
 
+
             @Override
-            public void onImagePicked(File imageFile, EasyImage.ImageSource source) {
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
                 //Handle the image
                 onPhotoReturned(imageFile);
             }
 
+
             //incase we press cancel on camera delete the photo
             @Override
-            public void onCanceled(EasyImage.ImageSource imageSource) {
-                if (imageSource == EasyImage.ImageSource.CAMERA) {
+            public void onCanceled(EasyImage.ImageSource source, int type) {
+                //Cancel handling, you might wanna remove taken photo if it was canceled
+                if (source == EasyImage.ImageSource.CAMERA) {
                     File photoFile = EasyImage.lastlyTakenButCanceledPhoto(MainActivity.this);
                     if (photoFile != null) photoFile.delete();
                 }
             }
         });
-
 
     }
 
@@ -840,7 +846,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         matrix.postRotate(90);
         Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getPath());
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
 

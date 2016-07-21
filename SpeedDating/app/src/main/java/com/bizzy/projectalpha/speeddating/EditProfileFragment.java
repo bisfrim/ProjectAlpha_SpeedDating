@@ -221,9 +221,9 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         setDatePickerListener(userAge); //set the datepicker
 
         if (parameters == null)
-            parameters.putInt(EditProfileFragment.ARG_AGE, (Integer) mCurrentUser.getAge());
+            parameters.putInt(EditProfileFragment.ARG_AGE, mCurrentUser.getAge());
         else {
-            parameters.putInt(EditProfileFragment.ARG_AGE, (Integer) mCurrentUser.getAge());
+            parameters.putInt(EditProfileFragment.ARG_AGE, mCurrentUser.getAge());
         }
 
         //Check for negative input for user age
@@ -233,7 +233,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
 
 
         userEthnicity();
-        multiSelectView.setText(mCurrentUser.getUserInterest()); //get
+        //multiSelectView.setText(mCurrentUser.getUserInterest()); //get
 
 
         // return the selected string and add a redLine to the selected item
@@ -252,15 +252,25 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
             else if(TextUtils.equals(orientation, "no_answer"))selectedNoanswerItem();
         }
 
+        //use regular expression to split comma, quotes white spaces,etc..
+        // when retrieving user selected interest from parse
+        //this is because of how the MultiSelectView library stores the string
+        List<String> myInterestList = new ArrayList<>();
+        String getInterest = mCurrentUser.getUserInterest();
+        String[] regex = getInterest.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+        for(String t: regex){
+            myInterestList.add(t);
+        }
+
         //orientationGroup = (RadioGroup)findViewById(R.id.orientation_group);
 
         //Get list of user interest
         List<String> stringList = new ArrayList<>();
-        stringList.add(getResources().getStringArray(R.array.interest)[1]);
+        stringList.add(getResources().getStringArray(R.array.interest)[0]);
 
         multiSelectView.setTitle("Select an interest");
         multiSelectView.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.interest)), new ArrayList());
+                getResources().getStringArray(R.array.interest)), myInterestList);
 
 
 
@@ -460,7 +470,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
                 //Valid and convert user calendar age to readable age and print a toast
                 String ageString = userAge.getText().toString();
                 try {
-                    convertDate = (Date) sdf.parse(ageString); //parse the date of birth format as string (dd-mm-yyyy)
+                    convertDate = sdf.parse(ageString); //parse the date of birth format as string (dd-mm-yyyy)
                     currentAge = calculatedAge(convertDate); //calculate the parsed format from calculated method
                 } catch (java.text.ParseException e) {
                     e.printStackTrace();
