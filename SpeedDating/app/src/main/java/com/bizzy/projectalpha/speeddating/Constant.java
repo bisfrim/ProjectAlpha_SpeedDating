@@ -30,4 +30,6 @@ public class Constant {
 
     public final static String ARG_AUTH_METHOD = "auth_method";
     public final static int AUTH_FACEBOOK = 0;
+    public static final int RC_SIGN_IN = 0;
+    public static final String ARG_GOOGLE_AUTH = "oauth2:";
 }

@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,9 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
@@ -40,8 +45,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
@@ -51,16 +59,21 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import android.view.View.OnClickListener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
-public class LoginActivity extends AppCompatActivity implements OnClickListener {
+
+
+public class LoginActivity extends AppCompatActivity implements OnClickListener,ConnectionCallbacks,OnConnectionFailedListener {
     protected EditText usernameField, mPasswordField;
     protected TextInputLayout inputLayoutUsername, inputLayoutPassword;
     private RelativeLayout coordinatorLayout;
@@ -72,6 +85,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private Boolean parseLoginEmailAsUsername;
     private ConnectionResult mConnectionResult;
     private Button googleSignInBtn, facebookSignInBtn;
+
+    private static final int PROFILE_PIC_SIZE = 150;
 
     ProgressDialog progressDialog;
     Snackbar snackbar;
@@ -118,13 +133,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         googleSignInBtn.setOnClickListener(this);
         facebookSignInBtn.setOnClickListener(this);
 
-        /*mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PLUS_LOGIN))
-                .addScope(new Scope(Scopes.EMAIL))
-                .build();*/
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this) //lets impement ConnectionCallbacks
+                .addOnConnectionFailedListener(this).addApi(Plus.API) // lets implement OnConnectionFailedListener
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+        mGoogleApiClient.connect();
 
     }
 
@@ -413,9 +426,211 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.google_btn:
+                // Signin button clicked
+                loginUsingGoolgePlus();
+                break;
+        }
+    }
 
-        //code here
+
+    private void loginUsingGoolgePlus() {
+        // TODO Auto-generated method stub
+        if (!mGoogleApiClient.isConnecting()) {
+            mSignInClicked = true;
+            resolveSignInError();
+        }
 
     }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        // TODO Auto-generated method stub
+        mSignInClicked = false;
+        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+
+        // Get user's information
+        getProfileInformation();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // TODO Auto-generated method stub
+        if (!connectionResult.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this,
+                    0).show();
+            return;
+        }
+
+        if (!mIntentInProgress) {
+            // Store the ConnectionResult for later usage
+            mConnectionResult = connectionResult;
+
+            if (mSignInClicked) {
+                // The user has already clicked 'sign-in' so we attempt to
+                // resolve all
+                // errors until the user is signed in, or they cancel.
+                resolveSignInError();
+            }
+        }
+    }
+
+    /**
+     * Method to resolve any signin errors for google plus
+     * */
+    private void resolveSignInError() {
+        if (mConnectionResult.hasResolution()) {
+            try {
+                mIntentInProgress = true;
+                mConnectionResult.startResolutionForResult(this, Constant.RC_SIGN_IN);
+            } catch (IntentSender.SendIntentException e) {
+                mIntentInProgress = false;
+                mGoogleApiClient.connect();
+            }
+        }
+    }
+
+
+    /**
+     * Fetching user's information name, email, profile pic
+     * */
+    private void getProfileInformation() {
+        final User newUser = new User();
+        try {
+            if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+                Person currentPerson = Plus.PeopleApi
+                        .getCurrentPerson(mGoogleApiClient);
+                String personName = currentPerson.getDisplayName();
+                String personPhotoUrl = currentPerson.getImage().getUrl();
+                String personGooglePlusProfile = currentPerson.getUrl();
+                final String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+
+                Log.e("myapp", "Name: " + personName + ", plusProfile: "
+                        + personGooglePlusProfile + ", email: " + email
+                        + ", Image: " + personPhotoUrl);
+
+                // by default the profile url gives 50x50 px image only
+                // we can replace the value with whatever dimension we want by
+                // replacing sz=X
+                //personPhotoUrl = personPhotoUrl.substring(0,
+                  //      personPhotoUrl.length() - 2)
+                    //    + PROFILE_PIC_SIZE;
+
+
+                newUser.setNickname(personName);
+                newUser.setEmail(email);
+                newUser.setInstallation(ParseInstallation.getCurrentInstallation());
+                newUser.saveInBackground();
+
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        googleAuthWithParse(email);
+                    }
+                }).start();
+            } else {
+                Toast.makeText(this,
+                        "Person information is null", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    protected void googleAuthWithParse(String email) {
+        // TODO Auto-generated method stub
+        String scopes = Constant.ARG_GOOGLE_AUTH + Scopes.PLUS_LOGIN + " ";
+        String googleAuthCode = null;
+        try {
+            googleAuthCode = GoogleAuthUtil.getToken(
+                    this,                                           // Context context
+                    email,                                             // String email
+                    scopes,                                            // String scope
+                    null                                      // Bundle bundle
+            );
+        } catch (UserRecoverableAuthException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (GoogleAuthException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        //Log.i(TAG, "Authentication Code: " + googleAuthCode);
+
+        final HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("code", googleAuthCode);
+        params.put("email", email);
+        //loads the Cloud function to create a Google user
+        ParseCloud.callFunctionInBackground("accessGoogleUser", params, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object returnObj, ParseException e) {
+                if (e == null) {
+                    Log.e("AccessToken", returnObj.toString());
+                    ParseUser.becomeInBackground(returnObj.toString(), new LogInCallback() {
+                        public void done(final ParseUser parseUser, ParseException e) {
+                            final User user = (User)parseUser;
+                            if (user != null && e == null) {
+                                Toast.makeText(LoginActivity.this, "The Google user validated", Toast.LENGTH_SHORT).show();
+
+                                if(user.isNew()){
+                                    //isNew means firsttime
+                                    ParseInstallation.getCurrentInstallation().put("user", user);
+                                    ParseInstallation.getCurrentInstallation().saveInBackground();
+                                    Log.d("MyApp", "User signed up and logged in through Google!");
+                                    //((User) user).setInstallation(ParseInstallation.getCurrentInstallation().getCurrentInstallation());
+                                    //user.saveInBackground();
+                                }else{
+                                    Intent mainIntent = new Intent(LoginActivity.this, UserDispatchActivity.class);
+                                    ParseInstallation.getCurrentInstallation().put("user", user);
+                                    ParseInstallation.getCurrentInstallation().saveInBackground();
+                                    user.setInstallation(ParseInstallation.getCurrentInstallation());
+                                    user.saveInBackground();
+                                    mainIntent.putExtra(Constant.ARG_GOOGLE_AUTH, Constant.RC_SIGN_IN);
+                                    startActivity(mainIntent);
+                                    LoginActivity.this.finish();
+
+                                    //loginSuccess();
+                                }
+                            } else if (e != null) {
+                                Toast.makeText(LoginActivity.this, "There was a problem creating your account.", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                                mGoogleApiClient.disconnect();
+                            } else
+                                Toast.makeText(LoginActivity.this, "The Google token could not be validated", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    if (e != null) {
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(e.getMessage());
+                            Toast.makeText(LoginActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+                        e.printStackTrace();
+                        mGoogleApiClient.disconnect();
+                    }
+                }
+            }
+        });
+    }
+
 
 }

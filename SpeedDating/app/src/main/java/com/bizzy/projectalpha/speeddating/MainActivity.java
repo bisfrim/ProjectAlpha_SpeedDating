@@ -752,7 +752,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             //item.setPath(aFile.getAbsolutePath());
             //listItem.add(item);
 
-            aFile.listFiles(); //this only gets the first image (we want to get all images selected in a array or something similar)
+            //aFile.listFiles(); //this only gets the first image (we want to get all images selected in a array or something similar)
             try {
                 image = readInFile(aFile.toString()); // read in the file as a byte array and process as string
             } catch (Exception ex) {
