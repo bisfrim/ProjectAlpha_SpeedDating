@@ -25,7 +25,7 @@ public class UserDispatchActivity extends Activity {
             startActivity(new Intent(this, MainActivity.class));
         } else{
             // start an intent for this logged out user
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, WelcomeActivity.class)); //LoginActivity
         }
     }
 }

@@ -51,11 +51,7 @@ public class User extends ParseUser {
 
     @Override
     public boolean equals(Object o) {
-        if(TextUtils.equals(this.getObjectId(), ((User) o).getObjectId())){
-            return true;
-        } else {
-            return false;
-        }
+        return TextUtils.equals(this.getObjectId(), ((User) o).getObjectId());
     }
 
     @Override
@@ -87,28 +83,23 @@ public class User extends ParseUser {
     }
 
     public boolean isMale(){
-        if(TextUtils.equals(getString(USER_IS_MALE), "true")) return true;
-        else return false;
+        return TextUtils.equals(getString(USER_IS_MALE), "true");
     }
 
     public boolean isBisexsual(){
-        if(TextUtils.equals(getString(USER_BISEXSUAL), "true"))return true;
-        else return false;
+        return TextUtils.equals(getString(USER_BISEXSUAL), "true");
     }
 
     public boolean isStraight(){
-        if (TextUtils.equals(getString(USER_STRAIGHT), "true"))return true;
-        else return false;
+        return TextUtils.equals(getString(USER_STRAIGHT), "true");
     }
 
     public boolean isGay(){
-        if (TextUtils.equals(getString(USER_GAY), "true"))return true;
-        else return false;
+        return TextUtils.equals(getString(USER_GAY), "true");
     }
 
     public boolean isNoanswer(){
-        if (TextUtils.equals(getString(USER_NOANSWER), "true"))return true;
-        else return false;
+        return TextUtils.equals(getString(USER_NOANSWER), "true");
     }
 
 
@@ -120,6 +111,7 @@ public class User extends ParseUser {
             return "<undefined>";
         }
     }
+
 
 
     public void setNickname(String nickname){
@@ -313,8 +305,7 @@ public class User extends ParseUser {
     }
 
     public boolean isOnline(){
-        if(TextUtils.equals(getString(USER_ONLINE),"yes")) return true;
-        else return false;
+        return TextUtils.equals(getString(USER_ONLINE), "yes");
     }
 
 

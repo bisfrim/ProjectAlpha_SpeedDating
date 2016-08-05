@@ -130,7 +130,7 @@ public class RegisterActivity extends LocationBaseActivity {
 
         mToolbar.setClickable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha, null));
+            mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_material, null));
         }
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setTitle("Register");
@@ -183,7 +183,7 @@ public class RegisterActivity extends LocationBaseActivity {
         radioSexButton = (RadioButton) findViewById(selectedId);// find the radiobutton by returned id
 
         try {
-            convertDate = (Date) sdf.parse(birthday); //parse the date of birth format as string (dd-mm-yyyy)
+            convertDate = sdf.parse(birthday); //parse the date of birth format as string (dd-mm-yyyy)
             currentAge = calculatedAge(convertDate); //calculate the parsed format from calculated method
         } catch (java.text.ParseException e) {
             e.printStackTrace();

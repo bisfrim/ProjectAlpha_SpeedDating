@@ -26,7 +26,16 @@ public class AuthApplication extends Application {
         //Parse.enableLocalDatastore(getApplicationContext());
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(UserUploadedPhotos.class);
-        Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
+        //Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
+
+        Parse.initialize(new Parse.Configuration.Builder(AuthApplication.this)
+                .applicationId(getString(R.string.parse_app_id))
+                .clientKey(getString(R.string.parse_client_key))
+                .server("https://parseapi.back4app.com")
+        .build()
+        );
+
+
         ParseFacebookUtils.initialize(this);
         ParsePush.subscribeInBackground("global", new SaveCallback() {
             @Override

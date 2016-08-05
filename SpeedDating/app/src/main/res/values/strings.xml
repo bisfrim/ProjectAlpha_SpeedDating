@@ -43,6 +43,8 @@
     <string name="progress_uploading">Saving photo...&#8230;</string>
     <string name="saving_info">Saving...&#8230;</string>
 
+    <string name="loading">Loading...</string>
+
     <!-- Drawer Items -->
     <string name="drawer_item_profile">Profile</string>
     <string name="drawer_item_people_near_me">People Near Me</string>
@@ -330,6 +332,8 @@
     <string name="action_login">Log In</string>
     <string name="title_activity_other_user_profile">OtherUserProfileActivity</string>
     <string name="title_activity_location_updates">LocationUpdates</string>
+
+
 
 
 </resources>

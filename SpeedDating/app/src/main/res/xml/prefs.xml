@@ -4,14 +4,12 @@
     xmlns:sample="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="I am">
-
         <SwitchPreference
             android:key="switch_male_pref"
             android:title="Male" />
         <SwitchPreference
             android:key="switch_female_pref"
             android:title="Female" />
-
 
     </PreferenceCategory>
 
@@ -44,6 +42,7 @@
             sample:msbp_minValue="18" />
 
     </PreferenceCategory>
+
 
 
 </PreferenceScreen>

@@ -20,6 +20,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
@@ -83,8 +84,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -103,6 +106,7 @@ import nl.changer.polypicker.utils.ImageInternalFetcher;
 public class MainActivity extends LocationBaseActivity implements View.OnClickListener {
 
     protected String LOG_TAG = "MainActivity";
+    public final static String SELECTED_PHOTOS   = "SELECTED_PHOTOS";
 
     private UserUploadedPhotos userUploadedPhotos;
     private ParseImageView imagePreview;
@@ -119,6 +123,8 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
     private ViewGroup mSelectedImagesContainer;
     HashSet<Uri> mMedia = new HashSet<Uri>();
+    private ArrayList<Uri> filePaths;
+    private String mPhotoFilePath;
 
     //Layouts
     CoordinatorLayout mProfileContentLayout;
@@ -167,7 +173,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     public void updateInfo() {
         if (fetchUserCallback != null)
             mCurrentUser = new User();
-            mCurrentUser.fetchIfNeededInBackground(fetchUserCallback);
+        mCurrentUser.fetchIfNeededInBackground(fetchUserCallback);
     }
 
     @Override
@@ -266,38 +272,13 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
         mNavigationDrawer.setOnDrawerItemClickListener(new OnDrawerItemClickListener());
 
-
-        //Android Marshmallow requires user to have control of permissions
-        //These permission has to be granted to use camera and gps
-        PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                //Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                Log.d(LOG_TAG, "Permission Granted");
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                //Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-                Log.d(LOG_TAG, "Permission Denied" + deniedPermissions.toString());
-            }
-        };
-        //TedPermission is a 3rd party library
-        new TedPermission(MainActivity.this)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage("we need permission for read camera and storage")
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setGotoSettingButtonText("allow permission")
-                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA) // Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
-                .check();
-
         //Fab button for adding images and editing user profile
         FloatingActionsMenu rightLabels = (FloatingActionsMenu) findViewById(R.id.right_labels);
         final com.getbase.floatingactionbutton.FloatingActionButton actionA = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.action_a);
         actionA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MainActivityPermissions.onPhotCheckPermissions(MainActivity.this);
                 getNImages();
             }
         });
@@ -346,7 +327,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         }*/
 
 
-        /*ParseQuery<ParseObject> innerQuery = new ParseQuery<ParseObject>("ImageTable");
+    /*    ParseQuery<ParseObject> innerQuery = new ParseQuery<ParseObject>("ImageTable");
         innerQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
@@ -355,6 +336,8 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                     ArrayList<File> parseObj = new ArrayList<File>();
                     for(ParseObject j: list){
                         userPhotoFiles = (ParseFile) j.get("imageFile");
+                        //mSelectedImagesContainer.setVisibility(View.VISIBLE);
+
                     }
 
                 }
@@ -634,6 +617,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == INTENT_REQUEST_GET_IMAGES || requestCode == INTENT_REQUEST_GET_N_IMAGES) {
                 Parcelable[] parcelableUris = data.getParcelableArrayExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+                //filePaths = data.getStringArrayListExtra(SELECTED_PHOTOS);
 
                 if (parcelableUris == null) {
                     return;
@@ -642,13 +626,41 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 // Java doesn't allow array casting, this is a little hack
                 Uri[] uris = new Uri[parcelableUris.length];
                 System.arraycopy(parcelableUris, 0, uris, 0, parcelableUris.length);
+                byte[] image = null;
 
                 if (uris != null) {
                     for (Uri uri : uris) {
                         Log.i(TAG, " uri: " + uri);
+                        filePaths = new ArrayList<>();
+                        filePaths.add(uri);
+                        Log.d(TAG, "LIST IMAGES:" + filePaths);
+                        try {
+                            image = readInFile(filePaths.toString()); // read in the file as a byte array and process as string
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
+                        //byte[] bFile = new byte[(int) aFile.length()];
+
+                        userPhotoFiles = new ParseFile("user_photo.jpg", image); //name the file as you wish, parse saves the image as a byte
+                        userPhotoFiles.saveInBackground(new SaveCallback() {
+
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    Toast.makeText(MainActivity.this,
+                                            "Error saving: " + e.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(MainActivity.this, "saving: ", Toast.LENGTH_SHORT).show();
+                                    MainActivity.this.setResult(Activity.RESULT_OK);
+                                    _savePost(userPhotoFiles); //upload the image to parse
+
+                                }
+                            }
+                        });
+
                         mMedia.add(uri);
                     }
-
                     showMedia();
                 }
             }
@@ -681,6 +693,14 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
     }
 
+    private File createPhotoFile() throws IOException {
+        final String filename = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        final File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        final File file = File.createTempFile(filename, ".jpg", directory);
+        mPhotoFilePath = file.getAbsolutePath();
+        return file;
+    }
+
     private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
@@ -702,8 +722,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         mSelectedImagesContainer.removeAllViews();
 
         //File aFile = null;
-        byte[] image = null;
-        ArrayList<String> thisList = new ArrayList<>();
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         Iterator<Uri> iterator = mMedia.iterator();
@@ -727,57 +746,16 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             if (!uri.toString().contains("content://")) {
                 // probably a relative uri
                 uri = Uri.fromFile(new File(uri.toString()));
-                //thisList.add(uri.toString());
             }
 
 
             imageFetcher.loadImage(uri, thumbnail);
             mSelectedImagesContainer.addView(imageHolder);
-
-            ///aFile.listFiles();
-
-
             // set the dimension to correctly
             // show the image thumbnail.
             int wdpx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
             int htpx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, getResources().getDisplayMetrics());
             thumbnail.setLayoutParams(new FrameLayout.LayoutParams(wdpx, htpx));
-
-
-            File aFile = new File(getRealPathFromURI(uri)); //Get the path of image URI
-            //thisList.add(String.valueOf(uri.getPath().length()));
-
-            //ListItem item=new ListItem();
-            //item.setName(aFile.getName());
-            //item.setPath(aFile.getAbsolutePath());
-            //listItem.add(item);
-
-            //aFile.listFiles(); //this only gets the first image (we want to get all images selected in a array or something similar)
-            try {
-                image = readInFile(aFile.toString()); // read in the file as a byte array and process as string
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            //byte[] bFile = new byte[(int) aFile.length()];
-
-            userPhotoFiles = new ParseFile("user_photo.jpg", image); //name the file as you wish, parse saves the image as a byte
-            userPhotoFiles.saveInBackground(new SaveCallback() {
-
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(MainActivity.this,
-                                "Error saving: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(MainActivity.this,"saving: ", Toast.LENGTH_SHORT).show();
-                        MainActivity.this.setResult(Activity.RESULT_OK);
-                        _savePost(userPhotoFiles); //upload the image to parse
-
-                    }
-                }
-            });
-
 
 
         }

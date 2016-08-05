@@ -521,14 +521,23 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                 // we can replace the value with whatever dimension we want by
                 // replacing sz=X
                 //personPhotoUrl = personPhotoUrl.substring(0,
-                  //      personPhotoUrl.length() - 2)
-                    //    + PROFILE_PIC_SIZE;
+                //      personPhotoUrl.length() - 2)
+                //    + PROFILE_PIC_SIZE;
 
 
                 newUser.setNickname(personName);
                 newUser.setEmail(email);
                 newUser.setInstallation(ParseInstallation.getCurrentInstallation());
-                newUser.saveInBackground();
+                newUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e != null){
+                            Toast.makeText(LoginActivity.this, "user in parse", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Log.d("LoginException", e.toString());
+                        }
+                    }
+                });
 
                 new Thread(new Runnable() {
 
@@ -594,6 +603,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                                     Log.d("MyApp", "User signed up and logged in through Google!");
                                     //((User) user).setInstallation(ParseInstallation.getCurrentInstallation().getCurrentInstallation());
                                     //user.saveInBackground();
+
                                 }else{
                                     Intent mainIntent = new Intent(LoginActivity.this, UserDispatchActivity.class);
                                     ParseInstallation.getCurrentInstallation().put("user", user);
