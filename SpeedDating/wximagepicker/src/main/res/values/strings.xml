@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">wxImagePicker</string>
+    <string name="get_image_count">%1$s/%2$s</string>
+</resources>
