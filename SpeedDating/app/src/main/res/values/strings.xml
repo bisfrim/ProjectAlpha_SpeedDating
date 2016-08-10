@@ -334,6 +334,16 @@
     <string name="title_activity_location_updates">LocationUpdates</string>
 
 
+    <!-- Messaging Activity -->
+    <string name="message_elipses">Message...</string>
+    <string name="send">Send</string>
+
+    <string name="title_activity_messaging">Messaging</string>
+
+    <!-- PubNub -->
+    <string name="pubnub_publish_key">pub-c-9b8fb866-bbd5-4b19-8ba1-a2b29bbfe701</string>
+    <string name="pubnub_subscribe_key">sub-c-e95cedc2-5d82-11e6-bca9-0619f8945a4f</string>
+
 
 
 </resources>

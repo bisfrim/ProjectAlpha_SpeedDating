@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,8 +11,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bizzy.projectalpha.speeddating.ActivityWithToolbar;
+import com.bizzy.projectalpha.speeddating.ConnectionDetect;
+import com.bizzy.projectalpha.speeddating.NavigationDrawerItems;
+import com.bizzy.projectalpha.speeddating.PhotoContent;
+import com.bizzy.projectalpha.speeddating.R;
 import com.bizzy.projectalpha.speeddating.adapter.ViewPagerAdapter;
 import com.bizzy.projectalpha.speeddating.layout_tab.SlidingTabLayout;
+import com.bizzy.projectalpha.speeddating.models.User;
 import com.mikepenz.materialdrawer.Drawer;
 
 import java.security.MessageDigest;

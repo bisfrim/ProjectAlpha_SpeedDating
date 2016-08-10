@@ -8,12 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bizzy.projectalpha.speeddating.R;
-import com.bizzy.projectalpha.speeddating.User;
+import com.bizzy.projectalpha.speeddating.models.User;
 import com.bizzy.projectalpha.speeddating.viewholder.PersonViewHolder;
 import com.bumptech.glide.Glide;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.bizzy.projectalpha.speeddating.viewholder.ImageViewHolder;
 
 /**
  * Created by androiddev on 24.11.15.

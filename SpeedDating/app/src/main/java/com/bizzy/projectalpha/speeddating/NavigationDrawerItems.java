@@ -3,8 +3,13 @@ package com.bizzy.projectalpha.speeddating;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.AdapterView;
 
+import com.bizzy.projectalpha.speeddating.activities.FindMatchActivity;
+import com.bizzy.projectalpha.speeddating.activities.MainActivity;
+import com.bizzy.projectalpha.speeddating.activities.MessageActivity;
+import com.bizzy.projectalpha.speeddating.activities.PeopleNearMeActivity;
+import com.bizzy.projectalpha.speeddating.activities.UserDispatchActivity;
+import com.bizzy.projectalpha.speeddating.models.User;
 import com.bumptech.glide.Glide;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;

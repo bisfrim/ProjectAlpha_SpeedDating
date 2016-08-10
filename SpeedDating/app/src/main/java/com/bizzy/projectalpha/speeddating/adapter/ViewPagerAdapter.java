@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.bizzy.projectalpha.speeddating.FemaleFragmentTab;
-import com.bizzy.projectalpha.speeddating.MaleFragmentTab;
+import com.bizzy.projectalpha.speeddating.fragments.FemaleFragmentTab;
+import com.bizzy.projectalpha.speeddating.fragments.MaleFragmentTab;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

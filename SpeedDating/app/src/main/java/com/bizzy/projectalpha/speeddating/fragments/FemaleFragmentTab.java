@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bizzy.projectalpha.speeddating.R;
 import com.bizzy.projectalpha.speeddating.adapter.UsernearmeParseAdapter;
 
 /**

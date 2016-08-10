@@ -2,18 +2,12 @@ package com.bizzy.projectalpha.speeddating;
 
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
 
-import com.bizzy.projectalpha.speeddating.adapter.UsernearmeParseAdapter;
+import com.bizzy.projectalpha.speeddating.activities.PeopleNearMeActivity;
 import com.bizzy.projectalpha.speeddating.entites.Ad;
 import com.bizzy.projectalpha.speeddating.entites.Person;
 import com.bizzy.projectalpha.speeddating.entites.Picture;
-import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 

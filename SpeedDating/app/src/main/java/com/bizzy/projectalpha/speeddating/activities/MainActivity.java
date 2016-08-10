@@ -1,15 +1,11 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.LauncherActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,14 +16,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -45,10 +38,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bizzy.projectalpha.speeddating.AuthApplication;
+import com.bizzy.projectalpha.speeddating.MainActivityPermissions;
+import com.bizzy.projectalpha.speeddating.R;
+import com.bizzy.projectalpha.speeddating.SettingsActivity;
+import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
+import com.bizzy.projectalpha.speeddating.models.Constant;
+import com.bizzy.projectalpha.speeddating.models.User;
 import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.ikkong.wximagepicker.Constants;
+import com.ikkong.wximagepicker.ImagePickerAdapter;
+import com.ikkong.wximagepicker.ImagePreviewDelActivity;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.loader.GlideImageLoader;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.view.CropImageView;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -59,15 +65,12 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.view.BezelImageView;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.yayandroid.locationmanager.LocationBaseActivity;
@@ -83,33 +86,33 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-import nl.changer.polypicker.Config;
-import nl.changer.polypicker.ImagePickerActivity;
 import nl.changer.polypicker.utils.ImageInternalFetcher;
 
 
-public class MainActivity extends LocationBaseActivity implements View.OnClickListener {
+public class MainActivity extends LocationBaseActivity implements View.OnClickListener,
+        ImagePickerAdapter.OnRecyclerViewItemClickListener {
 
     protected String LOG_TAG = "MainActivity";
     public final static String SELECTED_PHOTOS   = "SELECTED_PHOTOS";
 
     private UserUploadedPhotos userUploadedPhotos;
     private ParseImageView imagePreview;
+
+
+    private RecyclerView recylerView;
+    private ImagePickerAdapter adapter;
+    private ArrayList<ImageItem> selImageList;//当前选择的所有图片
+    private int maxImgCount = 30;//允许选择图片最大数
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -141,8 +144,6 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     private CharSequence mTitle;
 
     private ProgressDialog locProgressDialog;
-
-    private ArrayList<ListItem> listItem;
 
     EditProfileFragment mProfileEditFragment;
 
@@ -182,14 +183,15 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
         setContentView(R.layout.activity_main);
 
-        listItem=new ArrayList<>();
+        initImagePicker();//最好放到 Application oncreate执行
+        initWidget();
 
         //ButterKnife.bind(this);
         userUploadedPhotos = new UserUploadedPhotos();
 
         mContext = MainActivity.this;
 
-        mSelectedImagesContainer = (ViewGroup) findViewById(R.id.selected_photos_container);
+        //mSelectedImagesContainer = (ViewGroup) findViewById(R.id.selected_photos_container);
 
         View userImageHolder = LayoutInflater.from(this).inflate(R.layout.media_layout, null);
 
@@ -279,7 +281,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 MainActivityPermissions.onPhotCheckPermissions(MainActivity.this);
-                getNImages();
+                //getNImages();
             }
         });
 
@@ -346,7 +348,34 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
     }
 
-    private void getNImages() {
+
+    private void initWidget() {
+        recylerView = (RecyclerView) findViewById(R.id.recylerView);
+        selImageList = new ArrayList<>();
+        adapter = new ImagePickerAdapter(this,selImageList,maxImgCount);
+        adapter.refresh();
+        GridLayoutManager manager = new GridLayoutManager(this,4);
+        recylerView.setLayoutManager(manager);
+        recylerView.setHasFixedSize(true);
+        recylerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+    }
+
+    private void initImagePicker() {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(true);  //显示拍照按钮
+        imagePicker.setCrop(false);        //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true); //是否按矩形区域保存
+        imagePicker.setSelectLimit(maxImgCount);    //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
+        imagePicker.setFocusWidth(800);   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
+        imagePicker.setOutPutY(1000);//保存文件的高度。单位像素
+    }
+
+   /* private void getNImages() {
         Intent intent = new Intent(mContext, ImagePickerActivity.class);
         Config config = new Config.Builder()
                 .setTabBackgroundColor(R.color.white)    // set tab background color. Default white.
@@ -356,7 +385,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 .build();
         ImagePickerActivity.setConfig(config);
         startActivityForResult(intent, INTENT_REQUEST_GET_N_IMAGES);
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -415,6 +444,29 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         alert.show();
     }
 
+    @Override
+    public void onItemClick(View view, String data) {
+
+        switch(data){
+            case Constants.IMAGEITEM_DEFAULT_ADD:
+                //打开选择
+                //本次允许选择的数量
+                ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size() + 1);
+                //打开选择器
+                Intent intent = new Intent(this, ImageGridActivity.class);
+                startActivityForResult(intent, Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                break;
+            default:
+                //打开预览
+                Intent intent1 = new Intent(this, ImagePreviewDelActivity.class);
+                intent1.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, adapter.getRealSelImage());
+                intent1.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION,Integer.parseInt(data));
+                startActivityForResult(intent1,Constants.IMAGE_PREVIEW_ACTIVITY_REQUEST_CODE);
+                break;
+        }
+
+    }
+
 
     //Drawer items
     private class OnDrawerItemClickListener implements Drawer.OnDrawerItemClickListener {
@@ -425,6 +477,8 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 case Constant.DRAWER_ID_LOGOUT:
                     mCurrentUser.setOnline(false);
                     mCurrentUser.saveInBackground();
+                    //String userId = User.getCurrentUser().getObjectId();
+                    //((AuthApplication) getApplication()).unsubscribeFromMessageChannel(userId);
                     ParseUser.logOut();
                     Intent logoutIntent = new Intent(MainActivity.this, UserDispatchActivity.class);
                     logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -614,7 +668,24 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK) {
+
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            if (data != null && requestCode == Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                selImageList.addAll(selImageList.size()-1,images);
+                adapter.refresh();
+
+            }
+        }else if(resultCode == ImagePicker.RESULT_CODE_BACK){
+            if (data != null&& requestCode == Constants.IMAGE_PREVIEW_ACTIVITY_REQUEST_CODE) {
+                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+                selImageList.clear();
+                selImageList.addAll(images);
+                adapter.refresh();
+            }
+        }
+
+      /*  if (resultCode == Activity.RESULT_OK) {
             if (requestCode == INTENT_REQUEST_GET_IMAGES || requestCode == INTENT_REQUEST_GET_N_IMAGES) {
                 Parcelable[] parcelableUris = data.getParcelableArrayExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
                 //filePaths = data.getStringArrayListExtra(SELECTED_PHOTOS);
@@ -664,7 +735,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                     showMedia();
                 }
             }
-        }
+        }*/
 
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
@@ -693,14 +764,6 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
     }
 
-    private File createPhotoFile() throws IOException {
-        final String filename = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        final File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        final File file = File.createTempFile(filename, ".jpg", directory);
-        mPhotoFilePath = file.getAbsolutePath();
-        return file;
-    }
-
     private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
@@ -720,17 +783,12 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         // Remove all views before
         // adding the new ones.
         mSelectedImagesContainer.removeAllViews();
-
-        //File aFile = null;
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         Iterator<Uri> iterator = mMedia.iterator();
         ImageInternalFetcher imageFetcher = new ImageInternalFetcher(this, 500);
         while (iterator.hasNext()) {
             Uri uri = iterator.next();
-
-
             // showImage(uri);
             Log.i(TAG, " uri: " + uri);
             if (mMedia.size() >= 1) {

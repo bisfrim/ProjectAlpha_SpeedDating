@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_travel_transparent_background"
-    tools:context="com.bizzy.projectalpha.speeddating.RegisterActivity">
+    tools:context=".activities.RegisterActivity">
 
 
     <ScrollView
@@ -80,6 +80,7 @@
                             android:textColor="@color/alizarin"
                             android:textCursorDrawable="@null"
                             android:textSize="15sp"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -113,6 +114,7 @@
                             android:textColor="@color/alizarin"
                             android:textCursorDrawable="@null"
                             android:textSize="15sp"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -146,6 +148,7 @@
                             android:textColor="@color/alizarin"
                             android:textCursorDrawable="@null"
                             android:textSize="15sp"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -180,6 +183,7 @@
                             android:textColor="@color/alizarin"
                             android:textCursorDrawable="@null"
                             android:textSize="15sp"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -214,6 +218,7 @@
                             android:textColor="@color/alizarin"
                             android:textCursorDrawable="@null"
                             android:textSize="15sp"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -251,6 +256,7 @@
                             android:textColor="@color/alizarin"
                             android:textCursorDrawable="@null"
                             android:textSize="15sp"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -294,6 +300,7 @@
                             android:cursorVisible="false"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
+                            android:background="@drawable/bg_login_field"
                             android:theme="@style/EditTextAlizarinStyle" />
 
                     </android.support.design.widget.TextInputLayout>

@@ -1,10 +1,15 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.models;
 
+import android.app.Activity;
 import android.location.Location;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bizzy.projectalpha.speeddating.activities.MessageActivity;
+import com.bizzy.projectalpha.speeddating.adapter.MessageAdapter;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseClassName;
@@ -15,6 +20,15 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.pubnub.api.Callback;
+import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
+
+import org.json.JSONObject;
+
+import java.util.Date;
 
 /**
  * Created by bismark.frimpong on 12/8/2015.
@@ -23,6 +37,7 @@ import com.parse.ParseUser;
 @ParseClassName("_User")
 public class User extends ParseUser {
 
+    private static final String TAG = "USER";
     public static final String USER_PHOTO = "photo";
     public static final String USER_PHOTO_THUMB = "photo_thumb";
     public static final String USER_AGE = "age";
@@ -47,6 +62,8 @@ public class User extends ParseUser {
     public static final String USER_BIO = "bio";
     public static final String USER_INTEREST ="interest";
     public ParseFile userUploaded;
+
+    public User(){}
 
 
     @Override
@@ -335,6 +352,91 @@ public class User extends ParseUser {
             String geoPointString = String.format("%.4f",geoPoint.getLatitude()) + " : " + String.format("%.4f",geoPoint.getLongitude());
             return geoPointString;
         }
+    }
+
+
+    public void sendMessage(final Activity activity, final Pubnub pubnub, final Message message, final MessageAdapter msgAdapter) {
+        final String receiverId = message.getReceiverId();
+        message.setTimeSent(new Date());
+
+        message.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    JSONObject messageObject = message.toJSON();
+
+                    try {
+                        pubnub.subscribe(receiverId, new Callback() {
+                            @Override
+                            public void successCallback(String channel, Object message) {
+                                super.successCallback(channel, message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel, PubnubError error) {
+                                super.errorCallback(channel, error);
+                            }
+                        });
+                    } catch (PubnubException pubNubException) {
+                        pubNubException.printStackTrace();
+                    }
+
+                    Callback messageCallback = new Callback() {
+                        public void successCallback(String channel, Object response) {
+                            Log.d(TAG, response.toString());
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Add the message to the adapter
+                                    msgAdapter.addMessage(message);
+
+                                    // Hide the dialog
+                                    ((MessageActivity) activity).hideProgressDialog();
+                                }
+                            });
+
+                            // Unsubscribe from the channel once the message is sent
+                            pubnub.unsubscribe(receiverId);
+                        }
+
+                        public void errorCallback(String channel, PubnubError error) {
+                            Log.d(TAG, "Error sending message:" + error.toString());
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(activity, "Error sending message", Toast.LENGTH_LONG).show();
+
+                                    // Hide the dialog
+                                    ((MessageActivity) activity).hideProgressDialog();
+                                }
+                            });
+
+                            // Unsubscribe from the channel once the message is sent
+                            pubnub.unsubscribe(receiverId);
+                        }
+                    };
+
+                    pubnub.publish(receiverId, messageObject, messageCallback);
+                } else {
+                    Log.d(TAG, "Error saving message:" + e.toString());
+
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity, "Error sending message", Toast.LENGTH_LONG).show();
+
+                            // Hide the dialog
+                            ((MessageActivity) activity).hideProgressDialog();
+
+                        }
+                    });
+                }
+            }
+        });
+
+
     }
 
 

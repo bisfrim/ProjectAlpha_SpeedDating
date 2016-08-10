@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.fragments;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.bizzy.projectalpha.speeddating.ConnectionDetect;
+import com.bizzy.projectalpha.speeddating.DataProvider;
+import com.bizzy.projectalpha.speeddating.R;
+import com.bizzy.projectalpha.speeddating.activities.UsersProfileActivity;
 import com.bizzy.projectalpha.speeddating.adapter.UsernearmeParseAdapter;
 import com.bizzy.projectalpha.speeddating.listeners.OnGridItemSelectedListener;
 import com.bizzy.projectalpha.speeddating.loadmore.PersonAdapter;

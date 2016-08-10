@@ -10,7 +10,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/ParseUI-Widget" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/imagepicker" />
             <option value="$PROJECT_DIR$/multispinner-0.1.1" />
+            <option value="$PROJECT_DIR$/wximagepicker" />
           </set>
         </option>
         <option name="myModules">
@@ -18,7 +20,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/ParseUI-Widget" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/imagepicker" />
             <option value="$PROJECT_DIR$/multispinner-0.1.1" />
+            <option value="$PROJECT_DIR$/wximagepicker" />
           </set>
         </option>
       </GradleProjectSettings>

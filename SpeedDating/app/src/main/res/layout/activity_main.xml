@@ -6,7 +6,7 @@
     android:id="@+id/layout_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bizzy.projectalpha.speeddating.MainActivity">
+    tools:context=".activities.MainActivity">
 
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -260,7 +260,7 @@
 
                         </RelativeLayout>
 
-                        <HorizontalScrollView
+                        <!--<HorizontalScrollView
                             android:id="@+id/hori_scroll_view"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -285,7 +285,19 @@
                             </LinearLayout>
 
 
-                        </HorizontalScrollView>
+                        </HorizontalScrollView>-->
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recylerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:choiceMode="singleChoice"
+                            android:layout_marginTop="50dp"
+                            android:divider="@null"
+                            android:fadingEdge="none"
+                            android:listSelector="@android:color/transparent"
+                            android:scrollbarStyle="outsideOverlay" />
 
                     </RelativeLayout>
 

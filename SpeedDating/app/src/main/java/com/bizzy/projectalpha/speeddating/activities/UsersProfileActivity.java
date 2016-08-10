@@ -1,10 +1,13 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.activities;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.bizzy.projectalpha.speeddating.ActivityWithToolbar;
+import com.bizzy.projectalpha.speeddating.NavigationDrawerItems;
+import com.bizzy.projectalpha.speeddating.R;
 import com.bizzy.projectalpha.speeddating.loadmore.PersonAdapter;
 import com.mikepenz.materialdrawer.Drawer;
 

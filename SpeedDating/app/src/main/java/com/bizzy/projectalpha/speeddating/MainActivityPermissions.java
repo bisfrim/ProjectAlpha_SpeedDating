@@ -1,9 +1,8 @@
 package com.bizzy.projectalpha.speeddating;
 
-import android.*;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.bizzy.projectalpha.speeddating.activities.MainActivity;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
  * Android Marshmallow requires user to have control of permissions
  * These permission has to be granted to use camera and gps
  */
-final class MainActivityPermissions {
+public final class MainActivityPermissions {
     protected static String LOG_TAG = "MainActivityPermissions";
 
     private static final int REQUEST_ONPICKPHOTO = 0;
@@ -29,11 +28,11 @@ final class MainActivityPermissions {
 
     private static final String[] PERMISSION_GPS_LOCAITON = new String[] {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"};
 
-    private MainActivityPermissions() {
+    public MainActivityPermissions() {
     }
 
 
-    static void onPhotCheckPermissions(MainActivity target){
+    public static void onPhotCheckPermissions(MainActivity target){
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {

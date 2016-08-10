@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.models;
 
 /**
  * Created by bismark.frimpong on 12/8/2015.

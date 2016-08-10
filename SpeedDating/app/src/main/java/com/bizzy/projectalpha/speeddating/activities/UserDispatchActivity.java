@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.activities;
 
 import android.app.Activity;
 import android.content.Intent;

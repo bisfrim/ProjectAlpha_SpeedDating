@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.models;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

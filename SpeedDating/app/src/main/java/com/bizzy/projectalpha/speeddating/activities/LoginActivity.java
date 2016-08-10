@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -6,12 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -22,15 +19,17 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bizzy.projectalpha.speeddating.ConnectionDetect;
+import com.bizzy.projectalpha.speeddating.R;
+import com.bizzy.projectalpha.speeddating.models.Constant;
+import com.bizzy.projectalpha.speeddating.models.User;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -40,19 +39,15 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseFile;
 import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -62,11 +57,14 @@ import android.view.View.OnClickListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -85,6 +83,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     private Boolean parseLoginEmailAsUsername;
     private ConnectionResult mConnectionResult;
     private Button googleSignInBtn, facebookSignInBtn;
+
+    private static final String dateFormat = "MM/dd/yyyy";
+    private static final SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+    private Date convertDate;
+    private int currentAge;
 
     private static final int PROFILE_PIC_SIZE = 150;
 
@@ -305,7 +308,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         dialog.show();
 
         //Get list of facebook permissions
-        List<String> permissions = Arrays.asList("email", "public_profile", "user_birthday");
+        final List<String> permissions = Arrays.asList("email", "public_profile", "user_birthday");
 
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
             @Override
@@ -333,10 +336,21 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                                 Log.d("MyApp", jsonObject.toString());
                             final String email = graphResponse.getJSONObject().optString("email");
                             final String nickname = graphResponse.getJSONObject().optString("first_name") + " " + graphResponse.getJSONObject().optString("last_name");
+                            final String birthday = graphResponse.getJSONObject().optString("birthday");
+                            final String photoProfile = graphResponse.getJSONObject().optJSONObject("picture").optJSONObject("data").optString("url");
                             //user.setNoVip();
                             user.setNickname(nickname);
                             user.setInstallation(ParseInstallation.getCurrentInstallation());
                             user.setEmail(email);
+
+                            try {
+                                convertDate = sdf.parse(birthday); //parse the date of birth format as string (dd-mm-yyyy)
+                                currentAge = calculatedAge(convertDate); //calculate the parsed format from calculated method
+                            } catch (java.text.ParseException e) {
+                                e.printStackTrace();
+                            }
+                            user.setAge(currentAge);
+
                             user.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
@@ -357,7 +371,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                     });
 
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,email,gender,first_name,last_name");
+                    parameters.putString("fields", "id,email,gender,birthday,first_name,last_name");
                     request.setParameters(parameters);
                     request.executeAsync();
 
@@ -640,6 +654,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                 }
             }
         });
+    }
+
+    private int calculatedAge(Date nowAge){
+        Calendar age = Calendar.getInstance();
+        age.setTime(nowAge); //Date of birth
+
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.setTime(new Date()); //Now age
+
+        return currentDate.get(Calendar.YEAR) - age.get(Calendar.YEAR);
     }
 
 
