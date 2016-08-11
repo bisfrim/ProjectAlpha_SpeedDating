@@ -226,12 +226,14 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         CharSequence mDrawerTitle;
         mTitle = mDrawerTitle = getTitle();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //editInfoBtn.setOnClickListener(this);
 
         mCurrentUser = (User) User.getCurrentUser();
+        //toolbar.setTitle(mCurrentUser.getNickname());
         mCurrentUser.setOnline(true);
         mCurrentUser.saveInBackground();
         mCurrentUser.fetchIfNeededInBackground(fetchUserCallback);

@@ -59,6 +59,21 @@
 
     <string name="profile_edit">""</string>
 
+    <!-- Gender -->
+    <string-array name="genderValues">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+
+    <string-array name="relationshipValues">
+        <item>Single</item>
+        <item>In a relationship</item>
+        <item>Engaged</item>
+        <item>Married</item>
+        <item>Divorced</item>
+    </string-array>
+
 
     <!-- Ethnicity -->
     <string-array name="ethnicity">

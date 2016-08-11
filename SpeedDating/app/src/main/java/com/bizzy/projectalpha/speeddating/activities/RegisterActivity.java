@@ -96,7 +96,7 @@ public class RegisterActivity extends LocationBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         
-        mSignUpActivity = (RelativeLayout) findViewById(R.id.activity_register);
+        //mSignUpActivity = (RelativeLayout) findViewById(R.id.activity_register);
 
         mLoginIntent = this.getIntent();
 

@@ -16,21 +16,16 @@
 
     <PreferenceCategory android:title="Show me?">
 
-        <CheckBoxPreference
-            android:key="pref_male"
-            android:summaryOff="Off"
-            android:summaryOn="On"
-            android:title="Male" />
-
-        <CheckBoxPreference
-            android:key="pref_female"
-            android:summaryOff="Off"
-            android:summaryOn="On"
-            android:title="Female" />
+        <ListPreference
+            android:entries="@array/genderValues"
+            android:entryValues="@array/genderValues"
+            android:key="gender"
+            android:summary="Choose gender"
+            android:title="Gender" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Age?">
+ <!--   <PreferenceCategory android:title="Age?">
 
         <com.pavelsikun.seekbarpreference.SeekBarPreference
             android:defaultValue="18"
@@ -40,6 +35,40 @@
             sample:msbp_maxValue="50"
             sample:msbp_measurementUnit="+"
             sample:msbp_minValue="18" />
+
+    </PreferenceCategory>-->
+
+
+    <PreferenceCategory android:title="Other Information">
+        <EditTextPreference
+            android:key="occupations"
+            android:summary="Insert your occupation"
+            android:title="Occupations" />
+
+        <EditTextPreference
+            android:ellipsize="end"
+            android:key="interests"
+            android:summary="Insert your interests seperated by comma"
+            android:title="Interests" />
+
+        <ListPreference
+            android:entries="@array/relationshipValues"
+            android:entryValues="@array/relationshipValues"
+            android:key="relationshipStatus"
+            android:title="Relationship Status" />
+
+        <CheckBoxPreference
+            android:key="relationshipPublic"
+            android:title="Make your relationship status public" />
+
+
+        <ListPreference
+            android:key="country"
+            android:summary="Choose country"
+            android:title="Country" />
+        <CheckBoxPreference
+            android:key="countryPublic"
+            android:title="Make your country public" />
 
     </PreferenceCategory>
 

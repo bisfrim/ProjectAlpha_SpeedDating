@@ -1,5 +1,6 @@
 package com.bizzy.projectalpha.speeddating.activities;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,11 +12,14 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -69,9 +73,14 @@ import java.util.Locale;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener,ConnectionCallbacks,OnConnectionFailedListener {
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
     protected EditText usernameField, mPasswordField;
     protected TextInputLayout inputLayoutUsername, inputLayoutPassword;
     private RelativeLayout coordinatorLayout;
@@ -101,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         coordinatorLayout = (RelativeLayout) findViewById(R.id.layout_login);
 
@@ -267,12 +277,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                                             //dialog.dismiss();
                                             if(parseUser != null){
                                                 Log.d("OnClick", "User");
+
+                                                Explode explode = new Explode();
+                                                explode.setDuration(500);
+                                                getWindow().setExitTransition(explode);
+                                                getWindow().setEnterTransition(explode);
+                                                ActivityOptionsCompat oc2 = ActivityOptionsCompat.makeSceneTransitionAnimation(LoginActivity.this);
+
                                                 Intent mainIntent = new Intent(LoginActivity.this, UserDispatchActivity.class);
                                                 ParseInstallation.getCurrentInstallation().put("user", parseUser);
                                                 ParseInstallation.getCurrentInstallation().saveInBackground();
                                                 ((User) parseUser).setInstallation(ParseInstallation.getCurrentInstallation());
                                                 parseUser.saveInBackground();
-                                                startActivity(mainIntent);
+                                                startActivity(mainIntent,oc2.toBundle());
                                                 finish();
                                             }
 
@@ -439,11 +456,25 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
 
 
     @Override
+    @OnClick({R.id.fab})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.google_btn:
                 // Signin button clicked
                 loginUsingGoolgePlus();
+                break;
+
+            case R.id.fab:
+                getWindow().setExitTransition(null);
+                getWindow().setEnterTransition(null);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options =
+                            ActivityOptions.makeSceneTransitionAnimation(this, fab, fab.getTransitionName());
+                    startActivity(new Intent(this, RegisterActivity.class), options.toBundle());
+                } else {
+                    startActivity(new Intent(this, RegisterActivity.class));
+                }
                 break;
         }
     }
@@ -665,6 +696,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
 
         return currentDate.get(Calendar.YEAR) - age.get(Calendar.YEAR);
     }
+
+
 
 
 }
