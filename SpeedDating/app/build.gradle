@@ -78,5 +78,5 @@ dependencies {
     compile 'io.apptik.widget:multislider:1.2'
     compile project(path: ':ParseUI-Widget')
     compile project(path: ':wximagepicker')
-    compile files('libs/Pubnub-Android-3.7.2.jar')
+    compile files('libs/Pubnub-Android-3.7.10.jar')
 }

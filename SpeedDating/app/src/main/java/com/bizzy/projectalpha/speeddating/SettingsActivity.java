@@ -2,6 +2,8 @@ package com.bizzy.projectalpha.speeddating;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.CheckBoxPreference;
@@ -17,14 +19,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+import com.bizzy.projectalpha.speeddating.activities.MainActivity;
 import com.bizzy.projectalpha.speeddating.listeners.DetailsCommunicator;
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -33,10 +38,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class SettingsActivity extends AppCompatActivity implements ActivityWithToolbar {
+public class SettingsActivity extends PreferenceActivity {
 
     private Toolbar mToolbar;
     private Drawer mDatingDrawer;
+    SharedPreferences mPrefs;
 
     //private static SwitchPreference malePrefSwitch;
     //private static SwitchPreference femalePrefSwitch;
@@ -52,6 +58,8 @@ public class SettingsActivity extends AppCompatActivity implements ActivityWithT
 
     private static ListPreference relationshipPref;
     private static CheckBoxPreference relationshipPublicPref;
+    private Button footerButton;
+    ListView lv ;
 
 
 
@@ -61,217 +69,118 @@ public class SettingsActivity extends AppCompatActivity implements ActivityWithT
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_settings);
 
-        getFragmentManager()
-                .beginTransaction()
-                .replace(android.R.id.content, new PreferencesScreen())
-                .commit();
+        addPreferencesFromResource(R.xml.prefs);
+
+        footerButton = new Button(this);
+        footerButton.setText(R.string.action_logout);
+        footerButton.setTextColor(Color.WHITE);
+        lv = getListView();
+        lv.addFooterView(footerButton);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         mToolbar.setClickable(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_material, null));
         }
         mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle("Settings");
-
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar.setTitle(R.string.drawer_item_users_near_me);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener(){
 
             @Override
-            public void onClick(View v) {
-                finish();
+            public void onClick(View view) {
+                //finish();
+                Intent logoutIntent = new Intent(SettingsActivity.this, MainActivity.class);
+                logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(logoutIntent);
             }
         });
 
 
-        mDatingDrawer = NavigationDrawerItems.createDrawer(this);
-
-
-    }
-
-
-    public static class PreferencesScreen extends PreferenceFragment implements DetailsCommunicator {
-
-        private boolean genderMaleSwitch;
-        private boolean genderFemaleSwitch;
-        private boolean genderChanged;
-        private boolean countryChanged;
-        private boolean occupationChanged;
-        private boolean interestsChanged;
-        private boolean relationshipStatusChanged;
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.prefs);
+        final CheckBoxPreference prefMale = (CheckBoxPreference) findPreference("pref_male");
+        if (prefMale != null) {
+            prefMale.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean isMalePref = ((Boolean) newValue).booleanValue();
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putBoolean("pre_male", isMalePref);
+                    editor.commit();
+                    return true;
+                }
+            });
+        }
+        CheckBoxPreference pref_Female = (CheckBoxPreference) findPreference("pref_female");
+        if (pref_Female != null) {
+            pref_Female.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean isFemalePref = ((Boolean) newValue).booleanValue();
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putBoolean("pre_female", isFemalePref);
+                    editor.commit();
+                    return true;
+                }
+            });
         }
 
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            genderMaleSwitch = genderFemaleSwitch = genderChanged = countryChanged = occupationChanged = interestsChanged = relationshipStatusChanged = false;
-            int horizontalMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-            int verticalMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-            int topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (int) getResources().getDimension(R.dimen.activity_vertical_margin) - 15, getResources().getDisplayMetrics());
-
-            View v = super.onCreateView(inflater, container, savedInstanceState);
-            ListView lv = (ListView) v.findViewById(android.R.id.list);
-            lv.setPadding(horizontalMargin, topMargin, horizontalMargin, verticalMargin);
-            setViews();
-            return v;
-
+        SwitchPreference maleSwitch = (SwitchPreference) findPreference("switch_male_pref");
+        if (maleSwitch != null) {
+            maleSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean isMaleSwitchPref = ((Boolean) newValue).booleanValue();
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putBoolean("switch_male_pref", isMaleSwitchPref);
+                    editor.commit();
+                    return true;
+                }
+            });
+        }
+        SwitchPreference femaleSwitch = (SwitchPreference) findPreference("switch_female_pref");
+        if (femaleSwitch != null) {
+            femaleSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean isFemaleSwitchPref = ((Boolean) newValue).booleanValue();
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putBoolean("switch_female_pref", isFemaleSwitchPref);
+                    editor.commit();
+                    return true;
+                }
+            });
         }
 
 
-        private void setViews() {
-            /**
-             * Gender
-             */
-
-          /*  malePrefSwitch = (SwitchPreference) findPreference("switch_male_pref");
-            malePrefSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    genderMaleSwitch = true;
-                    malePrefSwitch.setSummary(newValue.toString());
-                    return false;
-                }
-            });
-
-            femalePrefSwitch = (SwitchPreference) findPreference("switch_female_pref");
-            femalePrefSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    genderFemaleSwitch = true;
-                    femalePrefSwitch.setSummary(newValue.toString());
-                    return false;
-                }
-            });*/
-
-            genderPref = (ListPreference) findPreference("gender");
-            genderPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    genderChanged = true;
-                    genderPref.setSummary(newValue.toString());
-                    return false;
-                }
-            });
-            genderPublicPref = (CheckBoxPreference) findPreference("genderPublic");
-
-            /**
-             * Country
-             */
-            countryPref = (ListPreference) findPreference("country");
-            ArrayList<String> countries = getCountries();
-            CharSequence[] cs = countries.toArray(new CharSequence[countries.size()]);
-            countries = null;
-            countryPref.setEntries(cs);
-            countryPref.setEntryValues(cs);
-            countryPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    countryChanged = true;
-                    countryPref.setSummary(newValue.toString());
-                    return false;
-                }
-            });
-            countryPublicPref = (CheckBoxPreference) findPreference("countryPublic");
-
-            /**
-             * Occupations
-             */
-            occupationsPref = (EditTextPreference) findPreference("occupations");
-            occupationsPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    occupationChanged = true;
-                    occupationsPref.setSummary(newValue.toString());
-                    return false;
-                }
-            });
-
-            /**
-             * Interests
-             */
-            interestsPref = (EditTextPreference) findPreference("interests");
-            interestsPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    interestsChanged = true;
-                    interestsPref.setSummary(newValue.toString());
-                    return false;
-                }
-            });
-
-            /**
-             * Relationship
-             */
-            relationshipPref = (ListPreference) findPreference("relationshipStatus");
-            relationshipPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    relationshipStatusChanged = true;
-                    relationshipPref.setSummary(newValue.toString());
-                    return false;
-                }
-            });
-            relationshipPublicPref = (CheckBoxPreference) findPreference("relationshipPublic");
-        }
-
-
-        @Override
-        public HashMap<String, String> getDataFromFragment() {
-            HashMap<String, String> profileDetails = new HashMap<>();
-
-            //profileDetails.put("MaleSwitch", (genderMaleSwitch) ? (String) malePrefSwitch.getSummary() : "");
-            //profileDetails.put("FemaleSwitch", (genderFemaleSwitch) ? (String) femalePrefSwitch.getSummary() : "");
-
-            profileDetails.put("Gender", (genderChanged) ? (String) genderPref.getSummary() : "");
-            profileDetails.put("GenderPublic", (genderPublicPref.isChecked()) ? "yes" : "no");
-
-            profileDetails.put("Country", (countryChanged) ? (String) countryPref.getSummary() : "");
-            profileDetails.put("CountryPublic", (countryPublicPref.isChecked()) ? "yes" : "no");
-
-            profileDetails.put("Occupation", (occupationChanged) ? (String) occupationsPref.getSummary() : "");
-            profileDetails.put("Interests", (interestsChanged) ? (String) interestsPref.getSummary() : "");
-
-            profileDetails.put("Relationship", (relationshipStatusChanged) ? (String) relationshipPref.getSummary() : "");
-            profileDetails.put("RelationshipPublic", (relationshipPublicPref.isChecked()) ? "yes" : "no");
-            return profileDetails;
-        }
-    }
-
-    private static ArrayList<String> getCountries() {
-        Locale[] locales = Locale.getAvailableLocales();
-        ArrayList<String> countries = new ArrayList<String>();
-        for (Locale loc : locales) {
-            String country = loc.getDisplayCountry();
-            if (country.trim().length() > 0 && !countries.contains(country)) {
-                countries.add(country);
-            }
-        }
-        Collections.sort(countries);
-        return countries;
-    }
 
 
 
-
-
-    @Override
-    public Toolbar getToolbar() {
-        return mToolbar;
     }
 
     @Override
-    public Activity getActivity() {
-        return this;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+       if (id == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public int getDriwerId() {
-        return NavigationDrawerItems.DRAWER_ID_SETTINGS;
-    }
 
+    private static int getResIdFromAttribute(final Activity activity, final int attr) {
+        if (attr == 0) {
+            return 0;
+        }
+        final TypedValue typedvalueattr = new TypedValue();
+        activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
+        return typedvalueattr.resourceId;
+    }
 
 
 }

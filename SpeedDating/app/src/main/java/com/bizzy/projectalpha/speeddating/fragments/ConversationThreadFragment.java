@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -56,12 +57,14 @@ public class ConversationThreadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.username = getArguments().getString(USERNAME_EXTRA);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_conversation_thread, container, false);
         msgField = (EditText) v.findViewById(R.id.messageBodyField);
+
         msgListView = (ListView) v.findViewById(R.id.listMessages);
         messages = new ArrayList<>();
         msgAdapter = new MessageAdapter((MessageActivity) getActivity(), messages);

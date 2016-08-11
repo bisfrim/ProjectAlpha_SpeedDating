@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.WindowManager;
 
 import com.bizzy.projectalpha.speeddating.ActivityWithToolbar;
 import com.bizzy.projectalpha.speeddating.AuthApplication;
@@ -25,7 +26,6 @@ public class MessageActivity extends AppCompatActivity implements ActivityWithTo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-
         ((AuthApplication) getApplication()).subscribeToMessagingChannel();
 
         progressDialog = new ProgressDialog(this);
