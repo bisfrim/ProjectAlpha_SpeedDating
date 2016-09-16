@@ -133,7 +133,7 @@ public class NavigationDrawerItems {
 
         @Override
         public boolean onItemClick(View view, int i, IDrawerItem iDrawerItem) {
-            switch (iDrawerItem.getIdentifier()){
+            switch ((int) iDrawerItem.getIdentifier()){
                 case DRAWER_ID_LOGOUT:
                     User currentUser = User.getUser();
                     currentUser.setOnline(false);

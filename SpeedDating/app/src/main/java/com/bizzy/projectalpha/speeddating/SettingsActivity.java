@@ -1,6 +1,8 @@
 package com.bizzy.projectalpha.speeddating;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,8 +30,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.bizzy.projectalpha.speeddating.activities.MainActivity;
+import com.bizzy.projectalpha.speeddating.fragments.SettingsFragment;
 import com.bizzy.projectalpha.speeddating.listeners.DetailsCommunicator;
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -38,7 +42,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class SettingsActivity extends PreferenceActivity {
+import io.apptik.widget.MultiSlider;
+
+public class SettingsActivity extends AppCompatActivity  implements ActivityWithToolbar{
+
+    private static final String FRAGMENT_TAG = SettingsActivity.class.getSimpleName() + "::SettingsfragmentTag";
 
     private Toolbar mToolbar;
     private Drawer mDatingDrawer;
@@ -67,92 +75,41 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_settings);
 
-        addPreferencesFromResource(R.xml.prefs);
-
-        footerButton = new Button(this);
-        footerButton.setText(R.string.action_logout);
-        footerButton.setTextColor(Color.WHITE);
-        lv = getListView();
-        lv.addFooterView(footerButton);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setClickable(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.abc_ic_ab_back_material, null));
-        }
-        mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle(R.string.drawer_item_users_near_me);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener(){
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mDatingDrawer = NavigationDrawerItems.createDrawer(this);
+
+        if (savedInstanceState == null) {
+            SettingsFragment fragment = new SettingsFragment();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_settings, fragment).commit();
+        }
+
+
+        final TextView min1 = (TextView) findViewById(R.id.minValue1);
+        final TextView max1 = (TextView) findViewById(R.id.maxValue1);
+
+        MultiSlider multiSlider1 = (MultiSlider) findViewById(R.id.range_slider1);
+
+
+        min1.setText(String.valueOf(multiSlider1.getThumb(0).getValue()));
+        max1.setText(String.valueOf(multiSlider1.getThumb(1).getValue()));
+
+        multiSlider1.setOnThumbValueChangeListener(new MultiSlider.SimpleOnThumbValueChangeListener() {
             @Override
-            public void onClick(View view) {
-                //finish();
-                Intent logoutIntent = new Intent(SettingsActivity.this, MainActivity.class);
-                logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(logoutIntent);
+            public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
+                if (thumbIndex == 0) {
+                    min1.setText(String.valueOf(value));
+                } else {
+                    max1.setText(String.valueOf(value));
+                }
             }
         });
-
-
-        final CheckBoxPreference prefMale = (CheckBoxPreference) findPreference("pref_male");
-        if (prefMale != null) {
-            prefMale.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean isMalePref = ((Boolean) newValue).booleanValue();
-                    SharedPreferences.Editor editor = mPrefs.edit();
-                    editor.putBoolean("pre_male", isMalePref);
-                    editor.commit();
-                    return true;
-                }
-            });
-        }
-        CheckBoxPreference pref_Female = (CheckBoxPreference) findPreference("pref_female");
-        if (pref_Female != null) {
-            pref_Female.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean isFemalePref = ((Boolean) newValue).booleanValue();
-                    SharedPreferences.Editor editor = mPrefs.edit();
-                    editor.putBoolean("pre_female", isFemalePref);
-                    editor.commit();
-                    return true;
-                }
-            });
-        }
-
-
-        SwitchPreference maleSwitch = (SwitchPreference) findPreference("switch_male_pref");
-        if (maleSwitch != null) {
-            maleSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean isMaleSwitchPref = ((Boolean) newValue).booleanValue();
-                    SharedPreferences.Editor editor = mPrefs.edit();
-                    editor.putBoolean("switch_male_pref", isMaleSwitchPref);
-                    editor.commit();
-                    return true;
-                }
-            });
-        }
-        SwitchPreference femaleSwitch = (SwitchPreference) findPreference("switch_female_pref");
-        if (femaleSwitch != null) {
-            femaleSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean isFemaleSwitchPref = ((Boolean) newValue).booleanValue();
-                    SharedPreferences.Editor editor = mPrefs.edit();
-                    editor.putBoolean("switch_female_pref", isFemaleSwitchPref);
-                    editor.commit();
-                    return true;
-                }
-            });
-        }
-
-
-
 
 
     }
@@ -165,7 +122,7 @@ public class SettingsActivity extends PreferenceActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-       if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             finish();
         }
 
@@ -183,4 +140,18 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
 
+    @Override
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+    @Override
+    public int getDriwerId() {
+        return NavigationDrawerItems.DRAWER_ID_SETTINGS;
+    }
 }

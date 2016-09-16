@@ -79,8 +79,6 @@ import butterknife.OnClick;
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener,ConnectionCallbacks,OnConnectionFailedListener {
-    @Bind(R.id.fab)
-    FloatingActionButton fab;
     protected EditText usernameField, mPasswordField;
     protected TextInputLayout inputLayoutUsername, inputLayoutPassword;
     private RelativeLayout coordinatorLayout;
@@ -122,8 +120,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         //username, password field
         googleSignInBtn = (Button) findViewById(R.id.google_btn);
         facebookSignInBtn = (Button)findViewById(R.id.facebook_btn);
-        inputLayoutUsername = (TextInputLayout) findViewById(R.id.input_layout_username);
-        inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
+        //inputLayoutUsername = (TextInputLayout) findViewById(R.id.input_layout_username);
+        //inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
         usernameField = (EditText) findViewById(R.id.username_field);
         mPasswordField = (EditText) findViewById(R.id.password_field);
 
@@ -456,25 +454,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
 
 
     @Override
-    @OnClick({R.id.fab})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.google_btn:
                 // Signin button clicked
                 loginUsingGoolgePlus();
-                break;
-
-            case R.id.fab:
-                getWindow().setExitTransition(null);
-                getWindow().setEnterTransition(null);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options =
-                            ActivityOptions.makeSceneTransitionAnimation(this, fab, fab.getTransitionName());
-                    startActivity(new Intent(this, RegisterActivity.class), options.toBundle());
-                } else {
-                    startActivity(new Intent(this, RegisterActivity.class));
-                }
                 break;
         }
     }

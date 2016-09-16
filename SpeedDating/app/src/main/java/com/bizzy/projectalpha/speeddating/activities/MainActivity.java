@@ -475,7 +475,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         @Override
         public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
             Log.d("DriwerIdentifer", String.valueOf(drawerItem.getIdentifier()));
-            switch (drawerItem.getIdentifier()) {
+            switch ((int) drawerItem.getIdentifier()) {
                 case Constant.DRAWER_ID_LOGOUT:
                     mCurrentUser.setOnline(false);
                     mCurrentUser.saveInBackground();

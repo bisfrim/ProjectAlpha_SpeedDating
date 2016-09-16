@@ -28,18 +28,16 @@
 
     </PreferenceCategory>
 
- <!--   <PreferenceCategory android:title="Age?">
-
-        <com.pavelsikun.seekbarpreference.SeekBarPreference
-            android:defaultValue="18"
-            android:key="age_seekbar"
-            android:summary="Show Ages "
-            sample:msbp_interval="1"
-            sample:msbp_maxValue="50"
-            sample:msbp_measurementUnit="+"
-            sample:msbp_minValue="18" />
-
-    </PreferenceCategory>-->
+    <!--   <PreferenceCategory android:title="Age?">
+           <com.pavelsikun.seekbarpreference.SeekBarPreference
+               android:defaultValue="18"
+               android:key="age_seekbar"
+               android:summary="Show Ages "
+               sample:msbp_interval="1"
+               sample:msbp_maxValue="50"
+               sample:msbp_measurementUnit="+"
+               sample:msbp_minValue="18" />
+       </PreferenceCategory>-->
 
 
 
@@ -57,19 +55,21 @@
 
     <PreferenceCategory android:title="Other Information">
         <EditTextPreference
-            android:key="occupations"
-            android:summary="Insert your occupation"
+            android:key="your_status"
+            android:summary="Insert your status"
+            android:singleLine="true"
             android:title="Occupations" />
 
-        <EditTextPreference
-            android:ellipsize="end"
-            android:key="interests"
-            android:summary="Insert your interests seperated by comma"
-            android:title="Interests" />
+        <MultiSelectListPreference
+            android:key="multi_select_list_interest"
+            android:title="Interest"
+            android:entries="@array/interest"
+            android:entryValues="@array/list_preference_entry_values"/>
 
         <ListPreference
             android:entries="@array/relationshipValues"
             android:entryValues="@array/relationshipValues"
+            android:summary="%s"
             android:key="relationshipStatus"
             android:title="Relationship Status" />
 
@@ -77,14 +77,6 @@
             android:key="relationshipPublic"
             android:title="Make your relationship status public" />
 
-
-        <ListPreference
-            android:key="country"
-            android:summary="Choose country"
-            android:title="Country" />
-        <CheckBoxPreference
-            android:key="countryPublic"
-            android:title="Make your country public" />
 
     </PreferenceCategory>
 

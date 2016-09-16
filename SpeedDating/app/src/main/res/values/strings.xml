@@ -59,6 +59,9 @@
 
     <string name="profile_edit">""</string>
 
+    <string name="switch_preference_summary_on">On</string>
+    <string name="switch_preference_summary_off">Off</string>
+
     <!-- Gender -->
     <string-array name="genderValues">
         <item>Male</item>
@@ -333,6 +336,22 @@
         <item>Nothing</item>
     </string-array>
 
+    <string-array name="list_preference_entry_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="default_value" translatable="false">
+        <item>999</item>
+        <item>0</item>
+    </string-array>
+
 
     <string name="todo_prompt">Enter todo details:</string>
     <string name="save">Save</string>
@@ -347,6 +366,8 @@
     <string name="action_login">Log In</string>
     <string name="title_activity_other_user_profile">OtherUserProfileActivity</string>
     <string name="title_activity_location_updates">LocationUpdates</string>
+
+    <!--Preference Screen -->
 
 
     <!-- Messaging Activity -->

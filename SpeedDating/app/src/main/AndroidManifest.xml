@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bizzy.projectalpha.speeddating">
     <!-- forcing override on these libraries due to minSdkVerion used in gradle build -->
-    <uses-sdk tools:overrideLibrary="com.mikepenz.materialdrawer,com.mikepenz.materialize,com.mikepenz.iconics.core,com.thomashaertel.widget,com.facebook,com.mikepenz.fontawesome_typeface_library,pl.aprilapps.easyphotopicker,com.pavelsikun.seekbarpreference,nl.changer.polypicker,android.support.v13,com.getbase.floatingactionbutton,     jp.wasabeef.glide.transformations,in.anshul.libray,com.toptoche.multiselectwidget,
-    com.github.phajduk.rxvalidator,com.jakewharton.rxbinding,com.jude.rollviewpager,com.heinrichreimersoftware.materialintro,com.yayandroid.locationmanager,io.apptik.widget" />
+    <uses-sdk tools:overrideLibrary="com.mikepenz.materialdrawer" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -48,17 +47,18 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_user_account"
-            android:windowSoftInputMode="adjustPan" />
+           />
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.RegisterActivity"
             android:windowSoftInputMode="stateHidden" />
+
         <activity android:name=".activities.MessageActivity"
             android:label="@string/title_activity_messaging"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/drawer_item_users_near_me"
