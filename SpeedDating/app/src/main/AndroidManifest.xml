@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.bizzy.projectalpha.speeddating">
-    <!-- forcing override on these libraries due to minSdkVerion used in gradle build -->
+    package="com.bizzy.projectalpha.speeddating"> <!-- forcing override on these libraries due to minSdkVerion used in gradle build -->
     <uses-sdk tools:overrideLibrary="com.mikepenz.materialdrawer" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,6 +14,13 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
 
     <application
         android:name=".AuthApplication"
@@ -43,26 +49,24 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCeenqBPzSxisN98O-rcU4VgYD27Tl37tY" />
 
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/title_activity_user_account"
-           />
+            android:label="@string/title_activity_user_account" />
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.RegisterActivity"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".activities.MessageActivity"
+        <activity
+            android:name=".activities.MessageActivity"
             android:label="@string/title_activity_messaging"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/drawer_item_users_near_me"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.FindMatchActivity" />
         <activity
             android:name=".activities.EditProfileFragment"
@@ -76,9 +80,31 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activities.UsersProfileActivity" />
-        <activity android:name=".activities.WelcomeActivity"></activity>
+        <activity android:name=".activities.WelcomeActivity" />
+        <activity
+            android:name="com.schibstedspain.leku.LocationPickerActivity"
+            android:label="@string/title_activity_location_picker"
+            android:parentActivityName=".activities.PeopleNearMeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.PeopleNearMeActivity" />
+        </activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="Settings"
+            android:theme="@style/AppTheme.Settings"
+            android:parentActivityName=".activities.UserDispatchActivity">
 
+        </activity>
     </application>
 
 </manifest>

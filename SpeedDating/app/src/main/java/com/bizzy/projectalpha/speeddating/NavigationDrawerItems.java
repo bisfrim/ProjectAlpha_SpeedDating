@@ -8,6 +8,7 @@ import com.bizzy.projectalpha.speeddating.activities.FindMatchActivity;
 import com.bizzy.projectalpha.speeddating.activities.MainActivity;
 import com.bizzy.projectalpha.speeddating.activities.MessageActivity;
 import com.bizzy.projectalpha.speeddating.activities.PeopleNearMeActivity;
+import com.bizzy.projectalpha.speeddating.activities.SettingsActivity;
 import com.bizzy.projectalpha.speeddating.activities.UserDispatchActivity;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bumptech.glide.Glide;

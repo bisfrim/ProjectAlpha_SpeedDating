@@ -6,27 +6,11 @@
     <color name="alizarin">#e74c3c</color>
     <color name="gray">#ededed</color>
     <color name="green_background_color">#3F51B5</color>
-    <color name="alizarin_second">#e78172</color>
     <color name="text_color">#454648</color>
-    <color name="secondary_text_color">#ff8f3d45</color>
     <color name="light_text_color">#fff</color>
-    <color name="background_button_color">#ce0404</color>
-    <color name="background_pressed_button_color">#fffb7272</color>
-    <color name="background_color">#ce0404</color>
-    <color name="tabsScrollColor">#8a140e</color>
+    <color name="icons">#FFFFFF</color>
 
-
-    <color name="default_color">#02a6d8</color>
-    <color name="default_color_dark">#52a6b8</color>
-    <color name="color_red">#FF0000</color>
-
-    <color name="theme_accent">#FFEB3B</color>
-
-
-
-    <color name="onboarder_bg_1">#455A64</color>
-    <color name="onboarder_bg_2">#37474F</color>
-    <color name="onboarder_bg_3">#263238</color>
+    <color name="primary_blue">#4A90E2</color>
 
     <color name="primary_text">#FAFAFA</color>
     <color name="secondary_text">#E0E0E0</color>

@@ -10,11 +10,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,10 +28,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bizzy.projectalpha.speeddating.ProjectAlphaClasses;
 import com.bizzy.projectalpha.speeddating.R;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bizzy.projectalpha.speeddating.profile_header.HeaderView;
 import com.bumptech.glide.Glide;
+import com.codemybrainsout.placesearch.PlaceSearchDialog;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
@@ -75,6 +79,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
     private static final String dateFormat = "dd-MM-yyyy";
     private static final SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
     private Date convertDate;
+    private String emptyUserInterest;
 
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
@@ -83,7 +88,8 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
 
     private Handler mHandler;
     public static String ARG_AGE = "age";
-    private EditText editUsername, userLocation, userAge, userBio;
+    private EditText editUsername, userAge, userBio;
+    private TextInputEditText userLocation;
     private ImageView mMaleImage,mFemaleImage,mStriaghtImage,mGayImage,mBisexsualImage, mNoanswerImge;
     private boolean mMaleSelected,mFemaleSelected = false;
     private boolean mStraightSelected,mGaySelected,mBisexsualSelected,mNoanswerSelcted = false;
@@ -125,7 +131,6 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         Bundle parameters = new Bundle();
 
         mMainActivity = new MainActivity();
-
         mContext = EditProfileFragment.this;
 
         setSupportActionBar(toolbar);
@@ -193,15 +198,29 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         cancelInfo = (Button)findViewById(R.id.cancel_btn);
         cancelInfo.setOnClickListener(this);
 
-        //edit current username
+        //get current username
         editUsername = (EditText) findViewById(R.id.edit_name);
         editUsername.setText(mCurrentUser.getNickname());
 
-        //edit current user bio
+        //get current user bio
         userBio = (EditText)findViewById(R.id.edit_bio);
         userBio.setText(mCurrentUser.getUserBio());
 
-        userLocation = (EditText)findViewById(R.id.edit_loaction);
+        userLocation = (TextInputEditText)findViewById(R.id.edit_loaction);
+        userLocation.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    showPlacePickerDialog();
+                }
+                return false;
+            }
+        });
+
+        //get the location set by the user
+        if(mCurrentUser.getString("userSetLocation") != null){
+            userLocation.setText(mCurrentUser.getUserSetLocation());
+        }
 
         userAge = (EditText) findViewById(R.id.user_age);
 
@@ -244,9 +263,13 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         //this is because of how the MultiSelectView library stores the string
         List<String> myInterestList = new ArrayList<>();
         String getInterest = mCurrentUser.getUserInterest();
-        String[] regex = getInterest.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-        for(String t: regex){
-            myInterestList.add(t);
+        if(getInterest == null){
+            getInterest = "Not set";
+        }else{
+            String[] regex = getInterest.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+            for(String t: regex){
+                myInterestList.add(t);
+            }
         }
 
         //orientationGroup = (RadioGroup)findViewById(R.id.orientation_group);
@@ -454,7 +477,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
                 if(mNoanswerSelcted)mCurrentUser.setOrientationNoanswer(true);
                 else mCurrentUser.setOrientationNoanswer(false);
 
-                //Valid and convert user calendar age to readable age and print a toast
+                //Valid and convert user calendar age to readable age
                 String ageString = userAge.getText().toString();
                 try {
                     convertDate = sdf.parse(ageString); //parse the date of birth format as string (dd-mm-yyyy)
@@ -467,8 +490,11 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
                 if (currentAge >= 18) {
                     mCurrentUser.setAge(currentAge);
 
+                    //convert calender year/month
+                   // mCurrentUser.setAge(Integer.parseInt(new ProjectAlphaClasses.PreferenceSettings().getAge(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))));
                 }else{
-                    Toast.makeText(EditProfileFragment.this, "You must be 18 or older!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfileFragment.this, "You must be 18 or older!", Toast.LENGTH_LONG).show();
+                    return;
                 }
 
 
@@ -483,6 +509,12 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
                     mCurrentUser.setUserBio(userBio.getText().toString());
                 }
 
+                //save currentSetLocation
+                if (!TextUtils.isEmpty(userLocation.getText().toString())) {
+
+                    mCurrentUser.setUserLoc(userLocation.getText().toString());
+                }
+
 
                 //Check for selected spinner item and save to parse
                 if(spinner.isSelected()) //this check doesn't work
@@ -494,6 +526,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
 
                 //Save the selected widget item to parse
                 mCurrentUser.setUserInterest(multiSelectView.getSelectedItems().toString());
+
 
 
                 //saveUserInfo.setImageResource(R.drawable.load_animation);
@@ -641,8 +674,18 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
         alert.show();
     }
 
-    public void userCurrentLocationClickHandler(View view) {
-        showInputDialog();
+    private void showPlacePickerDialog() {
+        PlaceSearchDialog placeSearchDialog = new PlaceSearchDialog(this, new PlaceSearchDialog.LocationNameListener() {
+            @Override
+            public void locationName(String locationName) {
+                userLocation.setText(locationName);
+            }
+        });
+        placeSearchDialog.show();
     }
+
+   /* public void userCurrentLocationClickHandler(View view) {
+        showInputDialog();
+    }*/
 
 }

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bizzy.projectalpha.speeddating.activities.MessageActivity;
 import com.bizzy.projectalpha.speeddating.adapter.MessageAdapter;
 import com.parse.GetCallback;
@@ -52,7 +51,7 @@ public class User extends ParseUser {
     public static final String USER_ONLINE = "online";
     public static final String COL_NICKNAME = "name";
     public static final String USER_ZIPCODE = "zipcode";
-    public static final String USER_LOCATION ="userLocation";
+    public static final String USER_LOCATION ="userSetLocation";
     public static final String USER_NOANSWER = "no_answer";
     public static final String USER_STRAIGHT = "straight";
     public static final String USER_GAY = "gay";
@@ -61,7 +60,31 @@ public class User extends ParseUser {
     public static final String USER_ETHNICITY = "ethnicity";
     public static final String USER_BIO = "bio";
     public static final String USER_INTEREST ="interest";
+    public static final String TYPE_FALSE = "false";
+    public static final String TYPE_TRUE = "true";
+
+    //Default search distance
+    public static final float DEFAULT_SEARCH_DISTANCE = 100.0f;
+    // Conversion from feet to meters
+    public static final float METERS_PER_FEET = 0.3048f;
+    // Conversion from kilometers to meters
+    public static final int METERS_PER_KILOMETER = 1000;
+
+
     public ParseFile userUploaded;
+
+    // Field names
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_FRIENDS_RELATION = "friendsRelation";
+    public static final String KEY_RECIPIENT_IDS = "recipientIds";
+    public static final String KEY_SENDER_ID = "senderId";
+    public static final String KEY_SENDER_NAME = "senderName";
+    public static final String KEY_FILE = "file";
+    public static final String KEY_FILE_TYPE = "fileType";
+    public static final String KEY_CREATED_AT = "createdAt";
+
+    public static final String TYPE_IMAGE = "image";
+    public static final String TYPE_VIDEO = "video";
 
     public User(){}
 
@@ -209,6 +232,10 @@ public class User extends ParseUser {
         put(USER_LOCATION, location);
     }
 
+    public String getUserSetLocation(){
+        return getString(USER_LOCATION);
+    }
+
     public void getPhoto(GetDataCallback callback){
         getParseFile(USER_PHOTO).getDataInBackground(callback);
     }
@@ -301,6 +328,7 @@ public class User extends ParseUser {
         return (User)ParseUser.getCurrentUser();
     }
 
+
     public static ParseQuery<User> getUserQuery(){
         return ParseQuery.getQuery(User.class);
     }
@@ -342,6 +370,10 @@ public class User extends ParseUser {
 
     public ParseGeoPoint getGeoPoint(){
         return (ParseGeoPoint)get(COL_GEO_POINT);
+    }
+
+    public ParseGeoPoint geoPointFromLocation(Location loc) {
+        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
     }
 
     public String getGeoPointString(){
@@ -438,6 +470,7 @@ public class User extends ParseUser {
 
 
     }
+
 
 
 }

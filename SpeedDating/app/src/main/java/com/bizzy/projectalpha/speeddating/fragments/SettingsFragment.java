@@ -33,7 +33,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public DividerDecoration onCreateItemDecoration() {
-        return new rikka.materialpreference.PreferenceFragment.CategoryDivideDividerDecoration();
+        return new CategoryDivideDividerDecoration();
     }
 
     @Override

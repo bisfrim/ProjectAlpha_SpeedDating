@@ -18,14 +18,14 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class PersonViewHolder extends BaseViewHolder<Person> {
     public TextView mTv_name;
     public ImageView mImg_face;
-    public TextView mTv_sign;
+    public TextView mTv_distance;
     public ImageView onlineStatusImage;
 
 
     public PersonViewHolder(ViewGroup parent) {
         super(parent, R.layout.item_person);
         mTv_name = $(R.id.person_name);
-        mTv_sign = $(R.id.person_sign);
+        mTv_distance = $(R.id.person_sign);
         mImg_face = $(R.id.person_face);
         onlineStatusImage =  $(R.id.image_online_status);
     }
@@ -33,7 +33,7 @@ public class PersonViewHolder extends BaseViewHolder<Person> {
     @Override
     public void setData(final Person person){
         mTv_name.setText(person.getName());
-        mTv_sign.setText(person.getSign());
+        mTv_distance.setText(person.getSign());
         Glide.with(getContext())
                 .load(person.getFace())
                 .placeholder(R.drawable.default_image)

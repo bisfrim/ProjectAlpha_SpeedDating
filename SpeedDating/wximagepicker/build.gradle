@@ -32,6 +32,7 @@ dependencies {
     //图片选择器 https://github.com/jeasonlzy0216/ImagePicker
     //compile 'com.lzy.widget:imagepicker:0.1.4'
     compile project(path: ':imagepicker')
+    compile 'com.parse:parse-android:1.13.1'
 }
 
 task sourcesJar(type: Jar) {

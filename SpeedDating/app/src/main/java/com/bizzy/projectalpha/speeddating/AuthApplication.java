@@ -16,6 +16,7 @@ import com.bizzy.projectalpha.speeddating.listeners.MessageListener;
 import com.bizzy.projectalpha.speeddating.models.Message;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
+import com.neumob.api.Neumob;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -57,6 +58,17 @@ public class AuthApplication extends Application {
                 .server("https://parseapi.back4app.com")
         .build()
         );
+
+        Neumob.initialize(getApplicationContext(),"3TKJqupvbFenN8xL" ,new Runnable() {
+        @Override
+        public void run() {
+            if (Neumob.isInitialized()) {
+                boolean isAccelerated = Neumob.isAccelerated();
+                Log.d(TAG, String.valueOf(isAccelerated));
+            } else if (Neumob.isAuthenticated()) {
+            }
+        }
+    });
 
 
         ParseFacebookUtils.initialize(this);
@@ -157,6 +169,7 @@ public class AuthApplication extends Application {
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle("Message from " + sender.getUsername())
                         .setContentText(message.getMessageBody())
+                        .setStyle(new NotificationCompat.BigTextStyle())
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 

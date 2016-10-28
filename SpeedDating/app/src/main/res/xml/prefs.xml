@@ -1,59 +1,51 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sample="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="I am">
+
+    <PreferenceCategory android:title="Search options">
         <SwitchPreference
             android:key="switch_male_pref"
-            android:title="Male" />
+            android:defaultValue="false"
+            android:title="Men" />
         <SwitchPreference
             android:key="switch_female_pref"
-            android:title="Female" />
+            android:defaultValue="true"
+            android:title="Women" />
+
+
+        <SwitchPreference
+            android:key="search_by_distance"
+            android:title="Search by Distance"
+            android:defaultValue="false"/>
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:defaultValue="5"
+            android:key="search_distance_radio"
+            android:title="Distance radio"
+            sample:msbp_interval="1"
+            sample:msbp_maxValue="100"
+            sample:msbp_measurementUnit="mi"
+            sample:msbp_minValue="1"
+            android:disableDependentsState="true" />
+
+
+        <com.bizzy.projectalpha.speeddating.RangeBarPreference
+            android:key="age_range"
+            android:title="Age Range" />
+
+        <SwitchPreference
+            android:key="search_visibility"
+            android:defaultValue="true"
+            android:title="Visible"/>
 
     </PreferenceCategory>
 
 
 
-    <PreferenceCategory android:title="Show me?">
-
-        <CheckBoxPreference
-            android:key="pref_male"
-            android:summaryOff="Off"
-            android:summaryOn="On"
-            android:title="Male" />
-
-        <CheckBoxPreference
-            android:key="pref_female"
-            android:summaryOff="Off"
-            android:summaryOn="On"
-            android:title="Female" />
-
-    </PreferenceCategory>
-
-    <!--   <PreferenceCategory android:title="Age?">
-           <com.pavelsikun.seekbarpreference.SeekBarPreference
-               android:defaultValue="18"
-               android:key="age_seekbar"
-               android:summary="Show Ages "
-               sample:msbp_interval="1"
-               sample:msbp_maxValue="50"
-               sample:msbp_measurementUnit="+"
-               sample:msbp_minValue="18" />
-       </PreferenceCategory>-->
 
 
-
-    <!--   <PreferenceCategory android:title="Age?">
-           <com.pavelsikun.seekbarpreference.SeekBarPreference
-               android:defaultValue="18"
-               android:key="age_seekbar"
-               android:summary="Show Ages "
-               sample:msbp_interval="1"
-               sample:msbp_maxValue="50"
-               sample:msbp_measurementUnit="+"
-               sample:msbp_minValue="18" />
-       </PreferenceCategory>-->
-
-
-    <PreferenceCategory android:title="Other Information">
+   <!-- <PreferenceCategory android:title="Other Information">
         <EditTextPreference
             android:key="your_status"
             android:summary="Insert your status"
@@ -78,8 +70,10 @@
             android:title="Make your relationship status public" />
 
 
+
     </PreferenceCategory>
 
+-->
 
 
 </PreferenceScreen>

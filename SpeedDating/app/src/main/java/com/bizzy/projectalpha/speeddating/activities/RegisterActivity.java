@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bizzy.projectalpha.speeddating.R;
+import com.bizzy.projectalpha.speeddating.ValidationUtils;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -66,16 +67,16 @@ public class RegisterActivity extends LocationBaseActivity {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-
+    LocationManager mLocManger;
     private ProgressDialog locProgressDialog;
 
     private RadioGroup radioSexGroup;
     private RadioButton radioSexButton;
-    private boolean mMaleSelected,mFemaleSelected = false;
+    private boolean mMaleSelected, mFemaleSelected = false;
 
     //EditText
     protected EditText registerNickname, registerUser, registerEmail,
-            registerPass, register_re_pass,register_Loc;
+            registerPass, register_re_pass, register_Loc;
 
     //TextView
     private EditText dateView;
@@ -95,10 +96,11 @@ public class RegisterActivity extends LocationBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        
+
         //mSignUpActivity = (RelativeLayout) findViewById(R.id.activity_register);
 
         mLoginIntent = this.getIntent();
+
 
         radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
 
@@ -108,7 +110,7 @@ public class RegisterActivity extends LocationBaseActivity {
         registerPass = (EditText) findViewById(R.id.signup_password);
         register_re_pass = (EditText) findViewById(R.id.signup_re_password);
 
-        register_Loc = (EditText)findViewById(R.id.register_location);
+        register_Loc = (EditText) findViewById(R.id.register_location);
 
         LocationManager.setLogType(LogType.GENERAL);
         getLocation();
@@ -119,8 +121,7 @@ public class RegisterActivity extends LocationBaseActivity {
 
         setDatePickerListener(dateView);
 
-        doValidation();
-
+        //doValidation();
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -182,16 +183,18 @@ public class RegisterActivity extends LocationBaseActivity {
         try {
             convertDate = sdf.parse(birthday); //parse the date of birth format as string (dd-mm-yyyy)
             currentAge = calculatedAge(convertDate); //calculate the parsed format from calculated method
+
+
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }
 
-        if (radioSexGroup.getCheckedRadioButtonId() == -1){
+        if (radioSexGroup.getCheckedRadioButtonId() == -1) {
             Toast.makeText(RegisterActivity.this, "Opps, Please choose a gender", Toast.LENGTH_SHORT).show();
             return;
         }
 
-/*
+
         // Validate the sign up data
         boolean validationError = false;
         StringBuilder validationErrorMessage = new StringBuilder(getString(R.string.error_intro));
@@ -227,10 +230,10 @@ public class RegisterActivity extends LocationBaseActivity {
             validationErrorMessage.append(getString(R.string.error_invalid_email));
         }
 
-        if(birthday.length() == 0 ){
+        if(currentAge == 0 ){
             validationError = true;
             validationErrorMessage.append(getString(R.string.error_blank_age));
-        }else if (Integer.valueOf(birthday) < 18){
+        }else if (currentAge < 18){
             validationError = true;
             validationErrorMessage.append(getString(R.string.error_check_age));
         }
@@ -243,9 +246,7 @@ public class RegisterActivity extends LocationBaseActivity {
             //Toast.makeText(RegisterActivity.this, validationErrorMessage.toString(), Toast.LENGTH_LONG).show();
 
             return;
-        }*/
-
-
+        }
 
 
         // Set up a progress dialog
@@ -278,7 +279,7 @@ public class RegisterActivity extends LocationBaseActivity {
                                         newUser.setGenderIsMale(true);
 
                                         Log.d("RegisterActivity", radioSexButton.getText().toString());
-                                    } else if(radioSexButton.getId() == R.id.radioFemale) {
+                                    } else if (radioSexButton.getId() == R.id.radioFemale) {
                                         newUser.setGenderIsMale(false);
                                         Log.d("RegisterActivity", radioSexButton.getText().toString());
                                     }
@@ -365,11 +366,10 @@ public class RegisterActivity extends LocationBaseActivity {
     }
 
 
-
-
     private void setDatePickerListener(final EditText birthday) {
         birthday.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 showDatePicker((EditText) v);
             }
         });
@@ -387,7 +387,7 @@ public class RegisterActivity extends LocationBaseActivity {
         dpd.show();
     }
 
-    private int calculatedAge(Date nowAge){
+    private int calculatedAge(Date nowAge) {
         Calendar age = Calendar.getInstance();
         age.setTime(nowAge); //Date of birth
 
@@ -397,19 +397,21 @@ public class RegisterActivity extends LocationBaseActivity {
         return currentDate.get(Calendar.YEAR) - age.get(Calendar.YEAR);
     }
 
-    private void doValidation(){
+    private void doValidation() {
         RxValidator.createFor(registerNickname)
                 .nonEmpty()
                 .onValueChanged()
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override public void call(RxValidationResult<EditText> result) {
+                    @Override
+                    public void call(RxValidationResult<EditText> result) {
                         result.getItem().setError(result.isProper() ? null : result.getMessage());
                         Log.i(TAG, "Validation result " + result.toString());
                     }
                 }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
+                    @Override
+                    public void call(Throwable throwable) {
                         Log.e(TAG, "Validation error", throwable);
                     }
                 });
@@ -420,12 +422,14 @@ public class RegisterActivity extends LocationBaseActivity {
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override public void call(RxValidationResult<EditText> result) {
+                    @Override
+                    public void call(RxValidationResult<EditText> result) {
                         result.getItem().setError(result.isProper() ? null : result.getMessage());
                         Log.i(TAG, "Validation result " + result.toString());
                     }
                 }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
+                    @Override
+                    public void call(Throwable throwable) {
                         Log.e(TAG, "Validation error", throwable);
                     }
                 });
@@ -437,12 +441,14 @@ public class RegisterActivity extends LocationBaseActivity {
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override public void call(RxValidationResult<EditText> result) {
+                    @Override
+                    public void call(RxValidationResult<EditText> result) {
                         result.getItem().setError(result.isProper() ? null : result.getMessage());
                         Log.i(TAG, "Validation result " + result.toString());
                     }
                 }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
+                    @Override
+                    public void call(Throwable throwable) {
                         Log.e(TAG, "Validation error", throwable);
                     }
                 });
@@ -454,12 +460,14 @@ public class RegisterActivity extends LocationBaseActivity {
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override public void call(RxValidationResult<EditText> result) {
+                    @Override
+                    public void call(RxValidationResult<EditText> result) {
                         result.getItem().setError(result.isProper() ? null : result.getMessage());
                         Log.i(TAG, "Validation result " + result.toString());
                     }
                 }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
+                    @Override
+                    public void call(Throwable throwable) {
                         Log.e(TAG, "Validation error", throwable);
                     }
                 });
@@ -470,12 +478,14 @@ public class RegisterActivity extends LocationBaseActivity {
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override public void call(RxValidationResult<EditText> result) {
+                    @Override
+                    public void call(RxValidationResult<EditText> result) {
                         result.getItem().setError(result.isProper() ? null : result.getMessage());
                         Log.i(TAG, "Validation result " + result.toString());
                     }
                 }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
+                    @Override
+                    public void call(Throwable throwable) {
                         Log.e(TAG, "Validation error", throwable);
                     }
                 });
@@ -487,21 +497,20 @@ public class RegisterActivity extends LocationBaseActivity {
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override public void call(RxValidationResult<EditText> result) {
+                    @Override
+                    public void call(RxValidationResult<EditText> result) {
                         result.getItem().setError(result.isProper() ? null : result.getMessage());
                         Log.i(TAG, "Validation result " + result.toString());
                     }
                 }, new Action1<Throwable>() {
-                    @Override public void call(Throwable throwable) {
+                    @Override
+                    public void call(Throwable throwable) {
                         Log.e(TAG, "Validation error", throwable);
                     }
                 });
 
 
     }
-
-
-
 
 
     @Override
@@ -603,15 +612,11 @@ public class RegisterActivity extends LocationBaseActivity {
             }
 
 
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
-
 
 
 }

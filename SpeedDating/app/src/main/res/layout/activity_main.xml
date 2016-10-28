@@ -260,6 +260,14 @@
 
                         </RelativeLayout>
 
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:id="@+id/mLinLayout"></LinearLayout>
+
                         <!--<HorizontalScrollView
                             android:id="@+id/hori_scroll_view"
                             android:layout_width="match_parent"

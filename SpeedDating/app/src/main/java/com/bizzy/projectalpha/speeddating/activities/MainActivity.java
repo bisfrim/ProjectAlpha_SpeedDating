@@ -38,13 +38,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bizzy.projectalpha.speeddating.AuthApplication;
 import com.bizzy.projectalpha.speeddating.MainActivityPermissions;
+import com.bizzy.projectalpha.speeddating.ProjectAlphaClasses;
 import com.bizzy.projectalpha.speeddating.R;
-import com.bizzy.projectalpha.speeddating.SettingsActivity;
-import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
 import com.bizzy.projectalpha.speeddating.models.Constant;
 import com.bizzy.projectalpha.speeddating.models.User;
+import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
 import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.ikkong.wximagepicker.Constants;
@@ -92,11 +91,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import id.zelory.compressor.Compressor;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import nl.changer.polypicker.utils.ImageInternalFetcher;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
-
-import nl.changer.polypicker.utils.ImageInternalFetcher;
 
 
 public class MainActivity extends LocationBaseActivity implements View.OnClickListener,
@@ -136,9 +135,10 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     TextView orientationField;
     TextView birthdayView, userBio;
     TextView userLoc;
-    EditText usernameView;
+    public EditText usernameView;
     TextView text_gender;
     LinearLayout mErrorLayout;
+    LinearLayout mLayout;
     RelativeLayout mWaitLayout;
 
     private CharSequence mTitle;
@@ -151,7 +151,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     Drawer mNavigationDrawer;
 
     //ImageView
-    private ImageView mGenderImage;
+    private ImageView mGenderImage, iv_img;
     private ImageView mOrientationImage;
     //private ImageView mGenderFemaleImage;
 
@@ -182,6 +182,11 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        mLayout = (LinearLayout)findViewById(R.id.mLinLayout);
+
+
+        Intent mIntent = getIntent();
+        String activeUsername = mIntent.getStringExtra("username");
 
         initImagePicker();//最好放到 Application oncreate执行
         initWidget();
@@ -314,40 +319,64 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         });
 
 
-        //ParseQuery query = new ParseQuery("ImageTable");
-        //query.whereEqualTo("personPosting", ParseUser.getCurrentUser());
-        //query.orderByDescending("createdAt");
+       /* ParseQuery<ParseObject> mImageQuery = new ParseQuery<ParseObject>("ImageTable");
+        mImageQuery.whereEqualTo("username",activeUsername);
+        //newest first
+        mImageQuery.orderByAscending("createdAt");
 
-
-        /*ParseFile photoFile = userUploadedPhotos.getParseFile("imageFile");
-        if (photoFile != null) {
-            imagePreview.setParseFile(photoFile);
-            imagePreview.loadInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    // nothing to do
-                }
-            });
-        }*/
-
-
-    /*    ParseQuery<ParseObject> innerQuery = new ParseQuery<ParseObject>("ImageTable");
-        innerQuery.findInBackground(new FindCallback<ParseObject>() {
+        mImageQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> list, ParseException e) {
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null)
+                {
+                    if(objects.size() > 0)
+                    {
+                        for(ParseObject mImage: objects)
+                        {
+                            ParseFile mFile = (ParseFile)mImage.get("imageFile");
+                            //download the image file
+                            mFile.getDataInBackground(new GetDataCallback() {
+                                @Override
+                                public void done(byte[] data, ParseException e) {
+                                    if(e == null)
+                                    {
+                                        //add an image view every time we find a new Image
+                                        Bitmap mImageBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                        iv_img = (ImageView)findViewById(com.ikkong.wximagepicker.R.id.iv_img);
 
-                if(list == null){
-                    ArrayList<File> parseObj = new ArrayList<File>();
-                    for(ParseObject j: list){
-                        userPhotoFiles = (ParseFile) j.get("imageFile");
-                        //mSelectedImagesContainer.setVisibility(View.VISIBLE);
-
+                                        iv_img.setImageBitmap(mImageBitmap);
+                                        //ImageView mImageView = new ImageView(getApplicationContext());
+                                        //mImageView.setImageBitmap(mImageBitmap);
+                                        //mImageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                          //      ViewGroup.LayoutParams.WRAP_CONTENT));
+                                        //add imageview to layout
+                                        //mLayout.addView(mImageView);
+                                    }
+                                    else
+                                    {
+                                        alert(e.getMessage());
+                                    }
+                                }
+                            });
+                        }
                     }
-
+                    else
+                    {
+                        alert("User has no posts yet");
+                    }
+                }
+                else
+                {
+                    alert(e.getMessage());
                 }
             }
-        });*/
+        });
+*/
 
+    }
+
+    public void alert(String Message) {
+        Toast.makeText(getApplicationContext(), Message, Toast.LENGTH_LONG).show();
     }
 
 
@@ -610,6 +639,8 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
 
+        ProjectAlphaClasses.PreferenceSettings.getConfigHelper();
+
         if (getLocationManager().isWaitingForLocation()
                 && !getLocationManager().isAnyDialogShowing()) {
             displayProgress();
@@ -674,6 +705,50 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             if (data != null && requestCode == Constants.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+
+/*
+                try {
+                    Uri selectedImage = data.getData();
+                    filePaths = new ArrayList<>();
+                    filePaths.add(selectedImage);
+                    Bitmap mBitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    //lets put the image in the image view
+                    //mImageView.setImageBitmap(mBitmapImage);
+                    Log.i(getPackageName(), "Image Recieved");
+                    //attempt Image upload
+                    //convert image into byte array
+                    ByteArrayOutputStream mImageStream = new ByteArrayOutputStream();
+                    mBitmapImage.compress(Bitmap.CompressFormat.PNG, 100, mImageStream);
+                    byte[] mImageBytes = mImageStream.toByteArray();
+
+                    ParseFile mImage = new ParseFile("user_photo.png", mImageBytes);
+
+                    ParseObject mImageUploadObject = new ParseObject("ImageTable");
+                    mImageUploadObject.put("username", User.getCurrentUser());
+                    mImageUploadObject.put("imageFile", mImage);
+                    //give the object a public read access
+                    ParseACL mAcl = new ParseACL();
+                    mAcl.setPublicReadAccess(true);
+                    mImageUploadObject.setACL(mAcl);
+
+                    mImageUploadObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                alert("Your Image has been Posted :)");
+                            } else
+                            {
+                                alert(e.getMessage());
+                            }
+                        }
+                    });
+
+                }
+                catch(Exception e)
+                {
+                    alert(e.getMessage());
+                }*/
+
                 selImageList.addAll(selImageList.size()-1,images);
                 adapter.refresh();
 
@@ -681,9 +756,12 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         }else if(resultCode == ImagePicker.RESULT_CODE_BACK){
             if (data != null&& requestCode == Constants.IMAGE_PREVIEW_ACTIVITY_REQUEST_CODE) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+
                 selImageList.clear();
                 selImageList.addAll(images);
                 adapter.refresh();
+
+
             }
         }
 
@@ -749,7 +827,10 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
                 //Handle the image
-                onPhotoReturned(imageFile);
+
+                File compressedImage = null;
+                compressedImage =  Compressor.getDefault(getApplicationContext()).compressToFile(imageFile);
+                onPhotoReturned(compressedImage);
             }
 
 
@@ -1098,7 +1179,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
             //String cityName = addresses.get(0).getAddressLine(0);
-            String stateName = addresses.get(0).getAddressLine(1);
+            String stateName = addresses.get(0).getLocality();
             //String countryName = addresses.get(0).getAddressLine(2);
 
             //String appendValue = location.getLatitude() + ", " + location.getLongitude() + "\n";
@@ -1119,5 +1200,6 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         }
 
     }
-
 }
+
+

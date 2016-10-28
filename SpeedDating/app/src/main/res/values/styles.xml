@@ -8,7 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
+
     </style>
+
+   <!-- <style name="Theme.Application.Settings" parent="AppTheme">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>-->
 
 
     <style name="MessagingTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -18,6 +23,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="AppTheme.Settings" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/icons</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="toolbarStyle">@style/Widget.Toolbar</item>
+    </style>
+
+    <style name="Widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/icons</item>
+    </style>
 
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">

@@ -60,7 +60,7 @@ public class FriendsFragment extends Fragment {
                         friendNames.add(parseUsers.get(i).getUsername().toString());
                     }
                     friendsAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                    R.layout.user_list_item, friendNames);
+                            R.layout.user_list_item, friendNames);
                     friendsListView.setAdapter(friendsAdapter);
                     friendsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
