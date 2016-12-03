@@ -39,6 +39,7 @@
     <string name="progress_login">Logging you in&#8230;</string>
     <string name="progress_signup">Signing you up&#8230;</string>
     <string name="imge_loading">Loading image&#8230;</string>
+    <string name="saving_loading">Saving image&#8230;</string>
 
     <string name="progress_uploading">Saving photo...&#8230;</string>
     <string name="saving_info">Saving...&#8230;</string>
@@ -50,6 +51,7 @@
     <string name="drawer_item_users_near_me">Settings</string>
     <string name="drawer_item_start_match">Find match</string>
     <string name="drawer_item_messages">Messages</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!--<string name="drawer_item_vip">VIP</string> -->
@@ -111,6 +113,9 @@
     <!-- PubNub -->
     <string name="pubnub_publish_key">pub-c-9b8fb866-bbd5-4b19-8ba1-a2b29bbfe701</string>
     <string name="pubnub_subscribe_key">sub-c-e95cedc2-5d82-11e6-bca9-0619f8945a4f</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

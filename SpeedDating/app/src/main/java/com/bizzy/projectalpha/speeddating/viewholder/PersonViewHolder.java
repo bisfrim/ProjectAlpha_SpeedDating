@@ -19,6 +19,7 @@ public class PersonViewHolder extends BaseViewHolder<Person> {
     public TextView mTv_name;
     public ImageView mImg_face;
     public TextView mTv_distance;
+    //public TextView mTv_age;
     public ImageView onlineStatusImage;
 
 
@@ -27,6 +28,7 @@ public class PersonViewHolder extends BaseViewHolder<Person> {
         mTv_name = $(R.id.person_name);
         mTv_distance = $(R.id.person_sign);
         mImg_face = $(R.id.person_face);
+        //mTv_age = $(R.id.person_age);
         onlineStatusImage =  $(R.id.image_online_status);
     }
 

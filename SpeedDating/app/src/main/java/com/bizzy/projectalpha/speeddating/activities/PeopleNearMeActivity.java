@@ -85,7 +85,6 @@ public class PeopleNearMeActivity extends AppCompatActivity implements ActivityW
     private boolean hasNetWork = true;
     ViewGroup parent;
 
-
     PersonViewHolder personImage;
 
     private ProgressDialog progressDialog;
@@ -186,8 +185,6 @@ public class PeopleNearMeActivity extends AppCompatActivity implements ActivityW
     @Override
     protected void onResume() {
         super.onResume();
-        //Log.d("PeopleNearMe:", "onResume");
-
         mWaitForInternetConnectionView.checkInternetConnection(new WaitForInternetConnectionView.OnConnectionIsAvailableListener() {
             @Override
             public void onConnectionIsAvailable() {
@@ -195,6 +192,7 @@ public class PeopleNearMeActivity extends AppCompatActivity implements ActivityW
                 mWaitForInternetConnectionView.close();
             }
         });
+        Log.d("PeopleNearMe:", "onResume");
 
 
         //mCurrentUser = (User)User.getCurrentUser();

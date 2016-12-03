@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.appyvet.rangebar.RangeBar;
 
@@ -42,7 +43,7 @@ public class RangeBarPreference extends Preference {
     @Override protected void onBindView(View view) {
         super.onBindView(view);
         rangebar = (RangeBar) view.findViewById(R.id.rangebar);
-
+        
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         Set<String> AgeRange = settings.getStringSet(getKey(), null);
 

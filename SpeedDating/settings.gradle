@@ -1,1 +1,1 @@
-include ':app', ':multispinner-0.1.1', ':ParseUI-Widget', ':wximagepicker', ':imagepicker'
+include ':app', ':multispinner-0.1.1', ':ParseUI-Widget'

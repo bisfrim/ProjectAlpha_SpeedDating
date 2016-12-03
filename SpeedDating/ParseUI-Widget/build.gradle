@@ -25,11 +25,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "23.0.1"
-
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 21
+        targetSdkVersion 24
+    }
+    productFlavors {
     }
 }

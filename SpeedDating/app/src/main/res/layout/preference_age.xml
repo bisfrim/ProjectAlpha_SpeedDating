@@ -32,6 +32,8 @@ android:background="?attr/selectableItemBackground" >
     android:layout_height="72dp"
     android:gravity="center_vertical">
 
+
+
     <com.appyvet.rangebar.RangeBar
         xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rangebar"

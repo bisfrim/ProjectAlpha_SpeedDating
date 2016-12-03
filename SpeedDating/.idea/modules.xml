@@ -5,9 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ParseUI-Widget/ParseUI-Widget.iml" filepath="$PROJECT_DIR$/ParseUI-Widget/ParseUI-Widget.iml" />
       <module fileurl="file://$PROJECT_DIR$/SpeedDating.iml" filepath="$PROJECT_DIR$/SpeedDating.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imagepicker/imagepicker.iml" filepath="$PROJECT_DIR$/imagepicker/imagepicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/multispinner-0.1.1/multispinner-0.1.1.iml" filepath="$PROJECT_DIR$/multispinner-0.1.1/multispinner-0.1.1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wximagepicker/wximagepicker.iml" filepath="$PROJECT_DIR$/wximagepicker/wximagepicker.iml" />
     </modules>
   </component>
 </project>

@@ -118,6 +118,7 @@ public class UsernearmeParseAdapter extends ParseQueryAdapter<User> {
             personImage.mTv_name = (TextView) v.findViewById(R.id.person_name);
             personImage.onlineStatusImage = (ImageView) v.findViewById(R.id.image_online_status);
             personImage.mTv_distance = (TextView) v.findViewById(R.id.person_sign);
+            //personImage.mTv_age = (TextView)v.findViewById(R.id.person_age);
             //viewHolder.userPhoto = (ImageView)v.findViewById(R.id.user_photo);
             //viewHolder.username = (TextView) v.findViewById(R.id.username);
             //viewHolder.onlineStatusImage = (ImageView) v.findViewById(R.id.image_online_status);
@@ -128,7 +129,8 @@ public class UsernearmeParseAdapter extends ParseQueryAdapter<User> {
             personImage = (PersonViewHolder) v.getTag();
         }
         Glide.with(getContext()).load(object.getPhotoUrl()).into(personImage.mImg_face);
-        personImage.mTv_name.setText(object.getNickname());
+        personImage.mTv_name.setText(object.getNickname().concat(",  "+object.getAge()));
+        //personImage.mTv_age.setText(object.getAge().toString());
         personImage.mTv_distance.setText(String.format("%.2f km", object.getGeoPoint().distanceInKilometersTo(mCurrentUser.getGeoPoint())));
         if (object.getOnlineStatus().equals("online")) {
             personImage.onlineStatusImage.setImageResource(R.drawable.ic_online_15_0_alizarin);

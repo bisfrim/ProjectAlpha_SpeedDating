@@ -16,7 +16,14 @@ import com.bizzy.projectalpha.speeddating.listeners.MessageListener;
 import com.bizzy.projectalpha.speeddating.models.Message;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.android.*;
+import com.crashlytics.android.Crashlytics;
+import com.facebook.stetho.Stetho;
 import com.neumob.api.Neumob;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -30,6 +37,7 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONObject;
 
 /**
@@ -37,14 +45,32 @@ import org.json.JSONObject;
  */
 public class AuthApplication extends Application {
     public static final String TODO_GROUP_NAME = "ALL_TODOS";
-    private static String TAG = "MessagingApp";
+    private static String TAG = "AuthApp";
     private Pubnub pubnub;
     private ConversationThreadFragment conversationFragment;
+    private Cloudinary cloudinary;
+    public Cloudinary getCloudinary() {
+        return cloudinary;
+    }
+
+    /**
+     * Provides access to the singleton and the getCloudinary method
+     * @param context Android Application context
+     * @return instance of the Application singleton.
+     */
+    public static AuthApplication getInstance(Context context) {
+        return (AuthApplication) context.getApplicationContext();
+    }
 
     @Override
     public void onCreate()
     {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
+        Stetho.initializeWithDefaults(this);
+        initUIL();
+        initCloudinary();
+
         //Parse.enableLocalDatastore(getApplicationContext());
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(UserUploadedPhotos.class);
@@ -58,6 +84,7 @@ public class AuthApplication extends Application {
                 .server("https://parseapi.back4app.com")
         .build()
         );
+        Log.i(TAG, "Parse initialized");
 
         Neumob.initialize(getApplicationContext(),"3TKJqupvbFenN8xL" ,new Runnable() {
         @Override
@@ -91,6 +118,25 @@ public class AuthApplication extends Application {
 
         //FacebookSdk.sdkInitialize(getApplicationContext());
 
+    }
+
+    private void initUIL() {
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+        ImageLoader.getInstance().init(config);
+        Log.i(TAG, "Universal Image Loader initialized");
+    }
+
+    private void initCloudinary() {
+        // Cloudinary: creating a cloudinary instance using meta-data from manifest
+
+        cloudinary = new Cloudinary(com.cloudinary.android.Utils.cloudinaryUrlFromContext(this));
+        Log.i(TAG, "Cloudinary initialized");
     }
 
 

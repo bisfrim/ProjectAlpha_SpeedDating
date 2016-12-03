@@ -1,6 +1,5 @@
 package com.bizzy.projectalpha.speeddating.activities;
 
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -32,7 +30,7 @@ import android.widget.Toast;
 
 import com.bizzy.projectalpha.speeddating.ConnectionDetect;
 import com.bizzy.projectalpha.speeddating.R;
-import com.bizzy.projectalpha.speeddating.models.Constant;
+import com.bizzy.projectalpha.speeddating.models.Constants;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -73,9 +71,7 @@ import java.util.Locale;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener,ConnectionCallbacks,OnConnectionFailedListener {
@@ -160,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
 
     public void signUpClickHandler(View view) {
         Intent signUpIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-        LoginActivity.this.startActivityForResult(signUpIntent, Constant.REQ_CODE_SIGN_UP);
+        LoginActivity.this.startActivityForResult(signUpIntent, Constants.REQ_CODE_SIGN_UP);
 
     }
 
@@ -391,7 +387,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                     request.executeAsync();
 
                     Intent mainIntent = new Intent(LoginActivity.this, UserDispatchActivity.class);
-                    mainIntent.putExtra(Constant.ARG_AUTH_METHOD, Constant.AUTH_FACEBOOK);
+                    mainIntent.putExtra(Constants.ARG_AUTH_METHOD, Constants.AUTH_FACEBOOK);
                     startActivity(mainIntent);
                     LoginActivity.this.finish();
 
@@ -405,7 +401,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                     ParseInstallation.getCurrentInstallation().saveInBackground();
                     user.setInstallation(ParseInstallation.getCurrentInstallation());
                     user.saveInBackground();
-                    mainIntent.putExtra(Constant.ARG_AUTH_METHOD, Constant.AUTH_FACEBOOK);
+                    mainIntent.putExtra(Constants.ARG_AUTH_METHOD, Constants.AUTH_FACEBOOK);
                     startActivity(mainIntent);
                     LoginActivity.this.finish();
                 }
@@ -420,7 +416,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
-            case Constant.RES_CODE_SIGN_UP_SUCCESS: {
+            case Constants.RES_CODE_SIGN_UP_SUCCESS: {
                 Intent mainIntent = new Intent(LoginActivity.this, UserDispatchActivity.class);
                 startActivity(mainIntent);
             }
@@ -519,7 +515,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         if (mConnectionResult.hasResolution()) {
             try {
                 mIntentInProgress = true;
-                mConnectionResult.startResolutionForResult(this, Constant.RC_SIGN_IN);
+                mConnectionResult.startResolutionForResult(this, Constants.RC_SIGN_IN);
             } catch (IntentSender.SendIntentException e) {
                 mIntentInProgress = false;
                 mGoogleApiClient.connect();
@@ -588,7 +584,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
 
     protected void googleAuthWithParse(String email) {
         // TODO Auto-generated method stub
-        String scopes = Constant.ARG_GOOGLE_AUTH + Scopes.PLUS_LOGIN + " ";
+        String scopes = Constants.ARG_GOOGLE_AUTH + Scopes.PLUS_LOGIN + " ";
         String googleAuthCode = null;
         try {
             googleAuthCode = GoogleAuthUtil.getToken(
@@ -639,7 +635,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                                     ParseInstallation.getCurrentInstallation().saveInBackground();
                                     user.setInstallation(ParseInstallation.getCurrentInstallation());
                                     user.saveInBackground();
-                                    mainIntent.putExtra(Constant.ARG_GOOGLE_AUTH, Constant.RC_SIGN_IN);
+                                    mainIntent.putExtra(Constants.ARG_GOOGLE_AUTH, Constants.RC_SIGN_IN);
                                     startActivity(mainIntent);
                                     LoginActivity.this.finish();
 

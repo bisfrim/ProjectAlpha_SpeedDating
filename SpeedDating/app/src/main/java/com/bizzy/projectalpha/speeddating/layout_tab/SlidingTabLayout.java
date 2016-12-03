@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.bizzy.projectalpha.speeddating.R;
 
-
 /**
  * Created by comp3 on 9/25/2015.
  */

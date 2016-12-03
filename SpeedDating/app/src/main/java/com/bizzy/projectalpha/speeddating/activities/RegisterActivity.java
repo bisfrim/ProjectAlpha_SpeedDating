@@ -30,8 +30,6 @@ import com.bizzy.projectalpha.speeddating.models.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.github.phajduk.rxvalidator.RxValidationResult;
-import com.github.phajduk.rxvalidator.RxValidator;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -296,7 +294,7 @@ public class RegisterActivity extends LocationBaseActivity {
                                             dialog.dismiss();
                                             if (e == null) {
                                                 //Log.d("SignUpException", e.toString());
-                                                //RegisterActivity.this.setResult(Constant.RES_CODE_SIGN_UP_SUCCESS, mLoginIntent);
+                                                //RegisterActivity.this.setResult(Constants.RES_CODE_SIGN_UP_SUCCESS, mLoginIntent);
                                                 startActivity(new Intent(RegisterActivity.this, UserDispatchActivity.class));
                                                 finish();
                                             } else {
@@ -397,120 +395,6 @@ public class RegisterActivity extends LocationBaseActivity {
         return currentDate.get(Calendar.YEAR) - age.get(Calendar.YEAR);
     }
 
-    private void doValidation() {
-        RxValidator.createFor(registerNickname)
-                .nonEmpty()
-                .onValueChanged()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override
-                    public void call(RxValidationResult<EditText> result) {
-                        result.getItem().setError(result.isProper() ? null : result.getMessage());
-                        Log.i(TAG, "Validation result " + result.toString());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Validation error", throwable);
-                    }
-                });
-
-        RxValidator.createFor(registerUser)
-                .nonEmpty()
-                .onValueChanged()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override
-                    public void call(RxValidationResult<EditText> result) {
-                        result.getItem().setError(result.isProper() ? null : result.getMessage());
-                        Log.i(TAG, "Validation result " + result.toString());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Validation error", throwable);
-                    }
-                });
-
-        RxValidator.createFor(registerEmail)
-                .nonEmpty()
-                .email()
-                .onValueChanged()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override
-                    public void call(RxValidationResult<EditText> result) {
-                        result.getItem().setError(result.isProper() ? null : result.getMessage());
-                        Log.i(TAG, "Validation result " + result.toString());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Validation error", throwable);
-                    }
-                });
-
-        RxValidator.createFor(registerPass)
-                .nonEmpty()
-                .minLength(5, "Min length is 5")
-                .onFocusChanged()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override
-                    public void call(RxValidationResult<EditText> result) {
-                        result.getItem().setError(result.isProper() ? null : result.getMessage());
-                        Log.i(TAG, "Validation result " + result.toString());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Validation error", throwable);
-                    }
-                });
-
-        RxValidator.createFor(register_re_pass)
-                .sameAs(registerPass, "Password does not match")
-                .onFocusChanged()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override
-                    public void call(RxValidationResult<EditText> result) {
-                        result.getItem().setError(result.isProper() ? null : result.getMessage());
-                        Log.i(TAG, "Validation result " + result.toString());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Validation error", throwable);
-                    }
-                });
-
-
-        RxValidator.createFor(dateView)
-                .age("You have to be 18y old", 18, sdf)
-                .onValueChanged()
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<RxValidationResult<EditText>>() {
-                    @Override
-                    public void call(RxValidationResult<EditText> result) {
-                        result.getItem().setError(result.isProper() ? null : result.getMessage());
-                        Log.i(TAG, "Validation result " + result.toString());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Validation error", throwable);
-                    }
-                });
-
-
-    }
 
 
     @Override

@@ -3,7 +3,7 @@ package com.bizzy.projectalpha.speeddating.models;
 /**
  * Created by bismark.frimpong on 12/8/2015.
  */
-public class Constant {
+public class Constants {
 
     //Identifer
     public final static int ID_PROFILE_DRAWER_ITEM = 0;
@@ -32,5 +32,8 @@ public class Constant {
     public static final String ARG_GOOGLE_AUTH = "oauth2:";
     public final static int AUTH_FACEBOOK = 0;
     public static final int RC_SIGN_IN = 0;
+    public static final String PARSE_MODEL = "Photo";
+    public static final String PARSE_CLOUDINARY_FIELD = "cloudinaryIdentifier";
+    public static final String PARSE_SIGN_CLOUD_FUNCTION = "sign_cloudinary_upload_request";
 
 }
