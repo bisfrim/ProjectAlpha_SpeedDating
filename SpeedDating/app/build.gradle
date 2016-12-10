@@ -98,7 +98,6 @@ dependencies {
     compile 'com.jude:easyrecyclerview:4.0.2'
     compile 'com.jude:rollviewpager:1.2.9'
     compile 'com.yayandroid:LocationManager:1.1.2'
-    compile 'com.github.RikkaW:MaterialPreference:v1.2'
     compile 'com.takisoft.fix:preference-v7:24.2.1.0'
     compile 'com.google.android.gms:play-services-ads:9.4.0'
     compile 'com.google.android.gms:play-services-auth:9.4.0'
@@ -114,7 +113,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.github.esafirm.android-image-picker:imagepicker:1.2.5'
     compile 'com.cloudinary:cloudinary-android:1.4.1'
-    compile 'com.github.joaquimley:faboptions:1.0.1'
+    compile 'com.yalantis:contextmenu:1.0.7'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }

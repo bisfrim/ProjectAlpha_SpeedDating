@@ -10,7 +10,7 @@
     <color name="light_text_color">#fff</color>
     <color name="icons">#FFFFFF</color>
     <color name="tabsScrollColor">#8a140e</color>
-
+    <color name="contacts_background">#ededed</color>
     <color name="primary_blue">#4A90E2</color>
 
     <color name="primary_text">#FAFAFA</color>

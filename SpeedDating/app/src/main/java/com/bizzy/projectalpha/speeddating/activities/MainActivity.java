@@ -280,6 +280,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                         new PrimaryDrawerItem().withName(R.string.drawer_item_people_near_me).withIcon(FontAwesome.Icon.faw_users).withIdentifier(Constants.DRAWER_ID_PEOPLE_NEAR_ME),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_start_match).withIcon(FontAwesome.Icon.faw_heart_o).withIdentifier(Constants.DRAWER_ID_START_MATCH),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_messages).withIcon(FontAwesome.Icon.faw_envelope_o).withIdentifier(Constants.DRAWER_ID_MESSAGES),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_connections).withIcon(FontAwesome.Icon.faw_users).withIdentifier(Constants.DRAWER_ID_CONNECTIONS),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_users_near_me).withIcon(FontAwesome.Icon.faw_wrench).withIdentifier(Constants.DRAWER_ID_SETTINGS),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_logout).withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(Constants.DRAWER_ID_LOGOUT)
                 )
@@ -429,6 +430,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 case Constants.DRAWER_ID_LOGOUT:
                     mCurrentUser.setOnline(false);
                     mCurrentUser.saveInBackground();
+                    Log.d("onlinestatus", mCurrentUser.getOnlineStatus());
                     //String userId = User.getCurrentUser().getObjectId();
                     //((AuthApplication) getApplication()).unsubscribeFromMessageChannel(userId);
                     ParseUser.logOut();
@@ -450,6 +452,12 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 case Constants.DRAWER_ID_MESSAGES:
                     Intent messageListIntent = new Intent(MainActivity.this, MessageActivity.class);
                     startActivity(messageListIntent);
+                    MainActivity.this.finish();
+                    break;
+
+                case Constants.DRAWER_ID_CONNECTIONS:
+                    Intent connectionsIntent = new Intent(MainActivity.this, ConnectionsActivity.class);
+                    startActivity(connectionsIntent);
                     MainActivity.this.finish();
                     break;
 
@@ -584,8 +592,6 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //mCurrentUser.setOnline(false);
-        //mCurrentUser.saveInBackground();
         Log.d("main111", "onDestroy");
     }
 

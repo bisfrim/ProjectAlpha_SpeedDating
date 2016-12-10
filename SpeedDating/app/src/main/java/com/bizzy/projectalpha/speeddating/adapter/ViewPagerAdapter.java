@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.bizzy.projectalpha.speeddating.fragments.DetailsTabFragment;
-import com.bizzy.projectalpha.speeddating.fragments.PhotoTabFragment;
+import com.bizzy.projectalpha.speeddating.fragments.FeedsTabFragment;
+import com.bizzy.projectalpha.speeddating.fragments.ConnectionsTabFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -28,12 +28,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         if(position == 0) // if the position is 0 we are returning the First tab
         {
-            PhotoTabFragment myPhotoTab = new PhotoTabFragment();
+            ConnectionsTabFragment myPhotoTab = new ConnectionsTabFragment();
             return myPhotoTab;
         }
         else             // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
         {
-            DetailsTabFragment myDetailsTab = new DetailsTabFragment();
+            FeedsTabFragment myDetailsTab = new FeedsTabFragment();
             return myDetailsTab;
         }
 

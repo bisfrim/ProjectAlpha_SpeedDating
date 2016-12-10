@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.bizzy.projectalpha.speeddating">
-
-    <!-- forcing override on these libraries due to minSdkVerion used in gradle build -->
-    <uses-sdk tools:overrideLibrary="com.facebook,com.toptoche.multiselectwidget,rikka.materialpreference,
-    com.codemybrainsout.placesearch,com.schibstedspain.leku,com.joaquimley.faboptions"/>
+    package="com.bizzy.projectalpha.speeddating"> <!-- forcing override on these libraries due to minSdkVerion used in gradle build -->
+    <uses-sdk tools:overrideLibrary="com.facebook,com.toptoche.multiselectwidget,rikka.materialpreference,     com.codemybrainsout.placesearch,com.schibstedspain.leku,com.joaquimley.faboptions" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -32,10 +29,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:name"
-        tools:node="replace">
-
-        <meta-data android:name="CLOUDINARY_URL" android:value="cloudinary://873565464766346:OdW6OguH0S1vcL41uBN0FHrBNmA@bisfrim"/>
+        tools:node="replace"
+        tools:replace="android:name">
+        <meta-data
+            android:name="CLOUDINARY_URL"
+            android:value="cloudinary://873565464766346:OdW6OguH0S1vcL41uBN0FHrBNmA@bisfrim" />
 
         <activity
             android:name=".activities.UserDispatchActivity"
@@ -75,6 +73,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.FindMatchActivity" />
+        <activity android:name=".activities.ConnectionsActivity" />
+        <activity
+            android:name=".activities.ImageViewerActivity"
+            android:label="@string/title_activity_image_viewer"
+            android:launchMode="singleTask" >
+        </activity>
         <activity
             android:name=".activities.EditProfileFragment"
             android:label="@string/profile_edit"
@@ -87,9 +91,8 @@
 
         <activity
             android:name=".activities.UsersProfileActivity"
-            android:launchMode="singleTask"
-            android:label=""/>
-
+            android:label=""
+            android:launchMode="singleTask" />
         <activity
             android:name="com.schibstedspain.leku.LocationPickerActivity"
             android:label="@string/title_activity_location_picker"
@@ -110,20 +113,18 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="Settings"
-            android:theme="@style/AppTheme.Settings"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.Settings" />
 
-        </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="31c89a863e33ac9576fd630b0e353be2d5752530" />
 
-
         <activity
             android:name="com.esafirm.imagepicker.features.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ImagePickerTheme"/>
-<!--
+            android:theme="@style/ImagePickerTheme" />
+        <!--
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.imagepicker.provider"
@@ -132,23 +133,20 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
-        </provider>-->
+        </provider>
+        -->
 
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.easyphotopicker.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths"
-                />
+                android:resource="@xml/filepaths" />
         </provider>
 
-        <activity
-            android:name="com.gun0912.tedpermission.TedPermissionActivity"/>
-
+        <activity android:name="com.gun0912.tedpermission.TedPermissionActivity" />
     </application>
 
 </manifest>

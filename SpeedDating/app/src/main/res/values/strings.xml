@@ -51,7 +51,14 @@
     <string name="drawer_item_users_near_me">Settings</string>
     <string name="drawer_item_start_match">Find match</string>
     <string name="drawer_item_messages">Messages</string>
+    <string name="drawer_item_connections">Connections</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="error_label">Oops</string>
+
+    <string name="contact_empty">No Contact</string>
+    <string name="error_loading_backend">An error happened with the backend</string>
+    <string name="title_activity_image_viewer">ImageViewerActivity</string>
+    <string name="context_menu">Context menu</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!--<string name="drawer_item_vip">VIP</string> -->

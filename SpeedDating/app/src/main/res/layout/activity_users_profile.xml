@@ -50,8 +50,8 @@
                     android:src="@drawable/ic_online_15_0_alizarin"/>
 
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
+                <!--<android.support.design.widget.FloatingActionButton
+                    android:id="@+id/add_contact_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
@@ -59,7 +59,7 @@
                     app:pressedTranslationZ="12dp"
                     app:borderWidth="0dp"
                     app:backgroundTint="@color/colorPrimary"
-                    android:src="@drawable/ic_add_connect" />
+                    android:src="@drawable/ic_add_connect" />-->
 
 
                 <android.support.v7.widget.Toolbar
@@ -110,13 +110,10 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-        <com.joaquimley.faboptions.FabOptions
-            android:id="@+id/fab_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end" />
-
 
     </android.support.design.widget.CoordinatorLayout>
+
+
+
 
 </RelativeLayout>

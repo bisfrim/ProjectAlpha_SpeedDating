@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
+import com.bizzy.projectalpha.speeddating.activities.ConnectionsActivity;
 import com.bizzy.projectalpha.speeddating.activities.FindMatchActivity;
 import com.bizzy.projectalpha.speeddating.activities.MainActivity;
 import com.bizzy.projectalpha.speeddating.activities.MessageActivity;
@@ -38,7 +39,8 @@ public class NavigationDrawerItems {
     public final static int DRAWER_ID_MESSAGES = 3;
     public final static int DRAWER_ID_PEOPLE_NEAR_ME = 4;
     public final static int DRAWER_ID_USERS_PROFILE = 5;
-    public final static int DRAWER_ID_LOGOUT = 6;
+    public final static int DRAWER_ID_CONNECTIONS = 6;
+    public final static int DRAWER_ID_LOGOUT = 7;
 
 
     private static Drawer mNavigationDrawer = null;
@@ -74,6 +76,7 @@ public class NavigationDrawerItems {
                         new PrimaryDrawerItem().withName(R.string.drawer_item_people_near_me).withIcon(FontAwesome.Icon.faw_users).withIdentifier(DRAWER_ID_PEOPLE_NEAR_ME),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_start_match).withIcon(FontAwesome.Icon.faw_heart_o).withIdentifier(DRAWER_ID_START_MATCH),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_messages).withIcon(FontAwesome.Icon.faw_envelope_o).withIdentifier(DRAWER_ID_MESSAGES),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_connections).withIcon(FontAwesome.Icon.faw_users).withIdentifier(DRAWER_ID_CONNECTIONS),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_users_near_me).withIcon(FontAwesome.Icon.faw_users).withIdentifier(DRAWER_ID_SETTINGS),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_logout).withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(DRAWER_ID_LOGOUT)
                 )
@@ -115,6 +118,7 @@ public class NavigationDrawerItems {
                         new PrimaryDrawerItem().withName(R.string.drawer_item_people_near_me).withIcon(FontAwesome.Icon.faw_users).withIdentifier(DRAWER_ID_PEOPLE_NEAR_ME),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_start_match).withIcon(FontAwesome.Icon.faw_heart_o).withIdentifier(DRAWER_ID_START_MATCH),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_messages).withIcon(FontAwesome.Icon.faw_envelope_o).withIdentifier(DRAWER_ID_MESSAGES),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_connections).withIcon(FontAwesome.Icon.faw_users).withIdentifier(DRAWER_ID_CONNECTIONS),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_users_near_me).withIcon(FontAwesome.Icon.faw_wrench).withIdentifier(DRAWER_ID_SETTINGS),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_logout).withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(DRAWER_ID_LOGOUT)
                 )
@@ -168,6 +172,10 @@ public class NavigationDrawerItems {
                 case DRAWER_ID_MESSAGES:
                     Intent messageListIntent = new Intent(mActivity, MessageActivity.class);
                     mActivity.startActivity(messageListIntent);
+                    break;
+                case DRAWER_ID_CONNECTIONS:
+                    Intent connectionsIntent = new Intent(mActivity, ConnectionsActivity.class);
+                    mActivity.startActivity(connectionsIntent);
                     break;
                 case DRAWER_ID_PEOPLE_NEAR_ME:
                     Intent people_near_meIntent = new Intent(mActivity, PeopleNearMeActivity.class);

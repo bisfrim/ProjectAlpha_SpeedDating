@@ -1,7 +1,5 @@
 package com.bizzy.projectalpha.speeddating.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,13 +10,14 @@ import android.view.ViewGroup;
 import com.bizzy.projectalpha.speeddating.R;
 
 
-public class PhotoTabFragment extends Fragment {
+public class FeedsTabFragment extends Fragment {
     private static final String TEXT_FRAGMENT = "TEXT_FRAGMENT";
-    private static final String LOG_TAG = "MyPhotoTabFragment";
+    private static final String LOG_TAG = "MyDetailsTabFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.fragment_photo_tab,container,false);
+        View v =inflater.inflate(R.layout.fragment_feeds_tab,container,false);
         return v;
     }
+
 }

@@ -27,6 +27,7 @@ public class Constants {
     public final static int DRAWER_ID_MESSAGES = 3;
     public final static int DRAWER_ID_START_MATCH = 4;
     public final static int DRAWER_ID_PEOPLE_NEAR_ME = 5;
+    public final static int DRAWER_ID_CONNECTIONS = 6;
 
     public final static String ARG_AUTH_METHOD = "auth_method";
     public static final String ARG_GOOGLE_AUTH = "oauth2:";
@@ -35,5 +36,7 @@ public class Constants {
     public static final String PARSE_MODEL = "Photo";
     public static final String PARSE_CLOUDINARY_FIELD = "cloudinaryIdentifier";
     public static final String PARSE_SIGN_CLOUD_FUNCTION = "sign_cloudinary_upload_request";
+    public static final String KEY_CONTACT_RELATION = "contactRelations";
+    public static final int KEY_LIMIT_CONTACT = 1000;
 
 }
