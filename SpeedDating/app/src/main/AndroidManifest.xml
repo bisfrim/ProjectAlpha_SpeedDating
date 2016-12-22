@@ -77,7 +77,12 @@
         <activity
             android:name=".activities.ImageViewerActivity"
             android:label="@string/title_activity_image_viewer"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"></activity>
+
+        <activity
+            android:name=".activities.PhotoViewerActivity"
+            android:label=""
+            android:launchMode="singleTask">
         </activity>
         <activity
             android:name=".activities.EditProfileFragment"

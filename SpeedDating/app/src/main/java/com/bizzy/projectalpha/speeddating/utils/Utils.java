@@ -1,4 +1,4 @@
-package com.bizzy.projectalpha.speeddating;
+package com.bizzy.projectalpha.speeddating.utils;
 
 import android.content.Context;
 import android.content.res.Resources;

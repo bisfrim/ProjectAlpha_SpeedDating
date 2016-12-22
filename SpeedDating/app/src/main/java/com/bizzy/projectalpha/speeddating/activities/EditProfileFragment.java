@@ -494,7 +494,7 @@ public class EditProfileFragment extends AppCompatActivity implements View.OnCli
                    // mCurrentUser.setAge(Integer.parseInt(new ProjectAlphaClasses.PreferenceSettings().getAge(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))));
                 }else{
                     Toast.makeText(EditProfileFragment.this, "You must be 18 or older!", Toast.LENGTH_LONG).show();
-                    return;
+                    //return;
                 }
 
 

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.bizzy.projectalpha.speeddating.activities.ConnectionsActivity;
 import com.bizzy.projectalpha.speeddating.activities.MainActivity;
 import com.bizzy.projectalpha.speeddating.activities.PeopleNearMeActivity;
 import com.bizzy.projectalpha.speeddating.activities.UsersProfileActivity;
+import com.bizzy.projectalpha.speeddating.adapter.UserAdapter;
 import com.bizzy.projectalpha.speeddating.models.Constants;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.parse.FindCallback;
@@ -39,17 +41,16 @@ import com.parse.SaveCallback;
 import java.util.List;
 
 
-public class ConnectionsTabFragment extends ListFragment {
+public class ConnectionsTabFragment extends Fragment {
     private static final String TEXT_FRAGMENT = "TEXT_FRAGMENT";
     private static final String LOG_TAG = "MyPhotoTabFragment";
     public static final String TAG = "ContactFragment";
 
-    protected List<ParseUser> mFriendsList;
-    protected ListView mListView;
+    protected List<User> mFriendsList;
+    protected GridView mListView;
     protected TextView mContactEmpty;
-    protected Button mButtonConnect;
     protected LinearLayout mLoading_ProgressBar;
-    protected ParseRelation<ParseUser> mContactRelation;
+    protected ParseRelation<User> mContactRelation;
     protected ParseUser mCurrentUser;
 
     public ConnectionsTabFragment() {
@@ -59,9 +60,10 @@ public class ConnectionsTabFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_connections_tab, container, false);
-        mListView = (ListView) v.findViewById(android.R.id.list);
+        mListView = (GridView) v.findViewById(R.id.friendsGrid);
         mContactEmpty = (TextView) v.findViewById(R.id.contactEmpty);
-        mButtonConnect = (Button)v.findViewById(R.id.button_find_contact);
+        mListView.setEmptyView(mContactEmpty);
+
         mLoading_ProgressBar = (LinearLayout) v.findViewById(R.id.loadingProgressBar);
         return v;
     }
@@ -77,21 +79,12 @@ public class ConnectionsTabFragment extends ListFragment {
         mCurrentUser = ParseUser.getCurrentUser();
         mContactRelation = mCurrentUser.getRelation(Constants.KEY_CONTACT_RELATION);
 
-        mButtonConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotoContacts = new Intent(getContext(), PeopleNearMeActivity.class);
-                gotoContacts.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(gotoContacts);
-            }
-        });
-
-        ParseQuery<ParseUser> query = mContactRelation.getQuery();
+        ParseQuery<User> query = mContactRelation.getQuery();
         query.orderByAscending(User.KEY_USERNAME);
         query.setLimit(Constants.KEY_LIMIT_CONTACT);
-        query.findInBackground(new FindCallback<ParseUser>() {
+        query.findInBackground(new FindCallback<User>() {
             @Override
-            public void done(final List<ParseUser> friends, ParseException e) {
+            public void done(final List<User> friends, ParseException e) {
                 mLoading_ProgressBar.setVisibility(View.INVISIBLE);
                 if (e == null) {
                     //Success
@@ -108,20 +101,31 @@ public class ConnectionsTabFragment extends ListFragment {
                     //Remove No Contact label
                     if (i > 0) {
                         mContactEmpty.setVisibility(View.INVISIBLE);
-                        mButtonConnect.setVisibility(View.INVISIBLE);
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                  /*  ArrayAdapter<String> adapter = new ArrayAdapter<>(
                             //Set Context using ListView
                             getListView().getContext(),
                             android.R.layout.simple_expandable_list_item_1,
                             usernames);
 
-                    setListAdapter(adapter);
+                    setListAdapter(adapter);*/
 
-                    mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+
+                    if (mListView.getAdapter() == null) {
+                        UserAdapter adapter = new UserAdapter(getActivity(), mFriendsList);
+                        mListView.setAdapter(adapter);
+                    }else {
+                        //
+                        ((UserAdapter)mListView.getAdapter()).refill(mFriendsList);
+                    }
+
+
+                    //Long click for options to remove user from Connections
+                    mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                        public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
                             String itemSelected = mListView.getItemAtPosition(position).toString();
                             //Toast.makeText(getContext(), itemSelected, Toast.LENGTH_LONG).show();
                             if(itemSelected !=  null){
@@ -143,7 +147,8 @@ public class ConnectionsTabFragment extends ListFragment {
                                             @Override
                                             public void done(ParseException e) {
                                                 Toast.makeText(getContext(), "Removed", Toast.LENGTH_SHORT).show();
-                                                updateStudentsList(friends);
+                                                view.setVisibility(View.GONE);
+                                                //updateStudentsList(friends);
                                             }
                                         });
                                     }
@@ -160,6 +165,24 @@ public class ConnectionsTabFragment extends ListFragment {
 
                                 // Showing Alert Message
                                 alertDialog.show();
+
+                            } else {
+                                Toast.makeText(getContext(), R.string.error_label, Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
+                        }
+                    });
+
+                    //Go to userProfile
+                    mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                            String itemSelected = mListView.getItemAtPosition(position).toString();
+                            //Toast.makeText(getContext(), itemSelected, Toast.LENGTH_LONG).show();
+                            if(itemSelected !=  null){
+                                Intent connectionsIntent = new Intent(getContext(), UsersProfileActivity.class);
+                                connectionsIntent.putExtra(UsersProfileActivity.EXTRA_USER_ID, mFriendsList.get(position).getObjectId());
+                                ConnectionsTabFragment.this.startActivity(connectionsIntent);
 
                             } else {
                                 Toast.makeText(getContext(), R.string.error_label, Toast.LENGTH_SHORT).show();
@@ -188,7 +211,7 @@ public class ConnectionsTabFragment extends ListFragment {
     }
 
 
-    public void updateStudentsList(List<ParseUser> newlist){
+    public void updateStudentsList(List<User> newlist){
         mFriendsList.clear();
         mFriendsList = newlist;
         mListView.invalidateViews();

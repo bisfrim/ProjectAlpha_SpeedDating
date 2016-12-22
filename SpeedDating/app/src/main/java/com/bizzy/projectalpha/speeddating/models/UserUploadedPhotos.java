@@ -49,11 +49,11 @@ public class UserUploadedPhotos extends ParseObject{
     }
 
     public ParseFile getPhotoFile() {
-        return getParseFile("imageFile");
+        return getParseFile("photo");
     }
 
     public void setPhotoFile(ParseFile file) {
-        put("imageFile", file);
+        put("photo", file);
 
         /*file.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {

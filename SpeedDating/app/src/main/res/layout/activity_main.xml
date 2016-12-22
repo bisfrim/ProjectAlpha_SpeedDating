@@ -125,7 +125,7 @@
                         android:focusable="false"
                         android:gravity="center"
                         android:onClick="usernameClickHandler"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:text=""
                         android:textSize="15sp"
                         android:theme="@style/EditTextAlizarinStyle" />

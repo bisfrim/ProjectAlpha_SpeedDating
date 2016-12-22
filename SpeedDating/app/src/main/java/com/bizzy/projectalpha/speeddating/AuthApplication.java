@@ -14,6 +14,7 @@ import com.bizzy.projectalpha.speeddating.activities.MessageActivity;
 import com.bizzy.projectalpha.speeddating.fragments.ConversationThreadFragment;
 import com.bizzy.projectalpha.speeddating.listeners.MessageListener;
 import com.bizzy.projectalpha.speeddating.models.Message;
+import com.bizzy.projectalpha.speeddating.models.Photo;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
 import com.cloudinary.Cloudinary;
@@ -75,6 +76,7 @@ public class AuthApplication extends Application {
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(UserUploadedPhotos.class);
         //ParseObject.registerSubclass(MessagingUser.class);
+        //ParseObject.registerSubclass(Photo.class);
         ParseObject.registerSubclass(Message.class);
         //Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
 

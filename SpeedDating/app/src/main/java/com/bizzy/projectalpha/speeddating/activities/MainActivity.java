@@ -43,8 +43,10 @@ import com.bizzy.projectalpha.speeddating.MainActivityPermissions;
 import com.bizzy.projectalpha.speeddating.ProjectAlphaClasses;
 import com.bizzy.projectalpha.speeddating.R;
 import com.bizzy.projectalpha.speeddating.models.Constants;
+import com.bizzy.projectalpha.speeddating.models.Photo;
 import com.bizzy.projectalpha.speeddating.models.User;
 import com.bizzy.projectalpha.speeddating.models.UserUploadedPhotos;
+import com.bizzy.projectalpha.speeddating.utils.FileUtils;
 import com.bumptech.glide.Glide;
 import com.cloudinary.Cloudinary;
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -83,7 +85,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -242,6 +246,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+        //mNavigationDrawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //editInfoBtn.setOnClickListener(this);
@@ -575,7 +580,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             displayProgress();
         }
 
-        ParseFile photoFile = getUserUploadedPhotos().getPhotoFile();
+   /*     ParseFile photoFile = getUserUploadedPhotos().getPhotoFile();
         if (photoFile != null) {
             imagePreview.setParseFile(photoFile);
             imagePreview.loadInBackground(new GetDataCallback() {
@@ -584,7 +589,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                     imagePreview.setVisibility(View.VISIBLE);
                 }
             });
-        }
+        }*/
 
 
     }
@@ -644,35 +649,54 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             thumbnail.setLayoutParams(new FrameLayout.LayoutParams(wdpx, htpx));
             Glide.with(this).load(images.get(i).getPath()).centerCrop().into(thumbnail);
 
-         /*   try {
+            try {
                 image = readInFile(images.get(i).getPath()); // read in the file as a byte array and process as string
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
-            userPhotoFiles = new ParseFile("user_photo" + ".png", image); //name the file as you wish, parse saves the image as a byte
-            userPhotoFiles.saveInBackground(new SaveCallback() {
-
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(MainActivity.this,
-                                "Error saving: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "saving: ", Toast.LENGTH_SHORT).show();
-                        MainActivity.this.setResult(Activity.RESULT_OK);
-                        _savePost(userPhotoFiles); //upload the image to parse
-
-                    }
-                }
-            });*/
-
-
         }
+        userPhotoFiles = new ParseFile("photo.jpg", image); //name the file as you wish, parse saves the image as a byte
+        userPhotoFiles.saveInBackground(new SaveCallback() {
+
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(MainActivity.this,
+                            "Error saving: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "saving: ", Toast.LENGTH_SHORT).show();
+                    MainActivity.this.setResult(Activity.RESULT_OK);
+                    _savePost(userPhotoFiles); //upload the image to parse
+
+                }
+            }
+        });
+
         //textView.setText(stringBuffer.toString());
-        startUpload(stringBuffer.toString());
+        //startUpload(stringBuffer.toString());
+        //savePhoto(stringBuffer.toString());
     }
 
+
+    private void savePhoto(String pathToImage) throws IOException {
+        byte[] pictureContents = readInFile(pathToImage);
+        if (pictureContents != null) {
+            final Photo photo = new Photo();
+            photo.setPhoto(new ParseFile(pictureContents));
+            photo.setPhotographer(ParseUser.getCurrentUser());
+            photo.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Toast.makeText(MainActivity.this, "Successfully saved photo", Toast.LENGTH_SHORT).show();
+                        //createPhotoTargets(photo, targets);
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
 
 
     private void startUpload(String filePath) {
@@ -686,7 +710,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                     // Parse+Cloudinary: retrieves a Cloudinary signature and upload params using the Parse cloud function.
                     //   see https://github.com/cloudinary/cloudinary_parse
                     HashMap<String, String> args = new HashMap<String, String>();
-                    uploadParams = ParseCloud.callFunction(Constants.PARSE_SIGN_CLOUD_FUNCTION ,args);
+                    uploadParams = ParseCloud.callFunction(Constants.PARSE_SIGN_CLOUD_FUNCTION, args);
 
                     Log.i("Signed request: %s", uploadParams.toString());
                 } catch (ParseException e) {
@@ -739,7 +763,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                     new AlertDialog.Builder(current)
                             .setTitle("Error")
                             .setMessage(error)
-                            .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     finish();
                                 }
@@ -850,14 +874,6 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         }
     }*/
 
-    public UserUploadedPhotos getUserUploadedPhotos() {
-        return userUploadedPhotos;
-    }
-
-    private void addUserPhotoAndReturn(ParseFile photoFile) {
-        getUserUploadedPhotos().setPhotoFile(photoFile);
-    }
-
     private void _savePost(ParseFile userImageFile) {
         // recall, that ParseFile is BOTH the "pile of data", the actual PNG,
         // but it's also what you save in the "post" table - not unlike you
@@ -866,8 +882,18 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
         dialog.setMessage(getString(R.string.saving_loading));
 
+        UserUploadedPhotos userUploadedPhotos = new UserUploadedPhotos();
+        userUploadedPhotos.setPhotoFile(userImageFile);
 
-        imgupload = new ParseObject("ImageTable");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+                .format(new Date());
+
+        userUploadedPhotos.setTitle(timeStamp);
+
+        userUploadedPhotos.setAuthor(User.getCurrentUser());
+
+
+       /* imgupload = new ParseObject("ImageTable");
         //imgupload.put("user_photo", "picturePath");
         imgupload.put("personPosting", User.getCurrentUser());
         //imgupload.put("tags", "profileImage");
@@ -876,10 +902,10 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
             imgupload.put("imageFile", userImageFile);
             // NOTE .. it seems best to "not set it,"
             // if there's NO image file on the post
-        }
+        }*/
 
         dialog.show();
-        imgupload.saveInBackground(new SaveCallback() {
+        userUploadedPhotos.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {
                 dialog.dismiss();
                 if (e == null) {
@@ -971,7 +997,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         File file = new File(path);
         InputStream input_stream = new BufferedInputStream(new FileInputStream(file));
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        data = new byte[16384]; // 16K
+        data = new byte[1024*1024]; //bufer size 1MB
         int bytes_read;
 
         while ((bytes_read = input_stream.read(data, 0, data.length)) != -1) {

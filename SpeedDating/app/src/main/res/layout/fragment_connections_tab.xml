@@ -4,13 +4,30 @@
     android:layout_height="match_parent"
     tools:context="com.bizzy.projectalpha.speeddating.fragments.ConnectionsTabFragment">
 
-    <ListView android:id="@android:id/list"
+ <!--   <ListView android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
-    </ListView>
+    </ListView>-->
+
+
+    <GridView
+        android:id="@+id/friendsGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:numColumns="auto_fit"
+        android:columnWidth="90dp"
+        android:stretchMode="columnWidth"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,17 +38,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:id="@+id/button_find_contact"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/contactEmpty"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/white"
-        android:text="FIND CONNECTIONS"/>
 
     <LinearLayout
         android:id="@+id/loadingProgressBar"

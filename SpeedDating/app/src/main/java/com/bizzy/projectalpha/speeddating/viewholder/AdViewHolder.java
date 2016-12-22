@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bizzy.projectalpha.speeddating.R;
-import com.bizzy.projectalpha.speeddating.Utils;
+import com.bizzy.projectalpha.speeddating.utils.Utils;
 import com.bizzy.projectalpha.speeddating.entites.Ad;
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;

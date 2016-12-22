@@ -312,13 +312,19 @@ public class UsersProfileActivity extends AppCompatActivity implements View.OnCl
         startActivity(imageViewerActivity);
     }
 
+    public void photoViewer(){
+        Intent startPhotoViewer = new Intent(this, PhotoViewerActivity.class);
+        startActivity(startPhotoViewer);
+    }
+
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.other_user_image:
-                showPhoto();
+                //showPhoto();
+                photoViewer();
                 break;
 
             default:
