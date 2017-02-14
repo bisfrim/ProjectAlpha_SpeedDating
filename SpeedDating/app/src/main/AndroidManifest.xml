@@ -24,6 +24,7 @@
 
     <application
         android:name=".AuthApplication"
+
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -77,18 +78,21 @@
         <activity
             android:name=".activities.ImageViewerActivity"
             android:label="@string/title_activity_image_viewer"
-            android:launchMode="singleTask"></activity>
-
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.PhotoViewerActivity"
             android:label=""
-            android:launchMode="singleTask">
-        </activity>
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.EditProfileFragment"
             android:label="@string/profile_edit"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.PeopleNearMeActivity" />
+
+        <activity
+            android:name=".activities.SingleImageViewActivity"
+            android:label="@string/title_activity_single_image_view" >
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

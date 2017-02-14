@@ -105,6 +105,7 @@ public class PeopleNearMeActivity extends AppCompatActivity implements ActivityW
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
         setContentView(R.layout.activity_people_near_me);
         mCurrentUser = (User)User.getCurrentUser();
+        mCurrentUser.setOnline(true);
 
         mToolbar = (Toolbar) findViewById(R.id.people_near_me_toolbar);
 
@@ -151,6 +152,13 @@ public class PeopleNearMeActivity extends AppCompatActivity implements ActivityW
         mListView.setOnItemClickListener(new OnItemClickListener());
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCurrentUser.setOnline(false);
+        Log.d("peopleNearMe", "onDestroy");
     }
 
     private void loadGenderUser() {

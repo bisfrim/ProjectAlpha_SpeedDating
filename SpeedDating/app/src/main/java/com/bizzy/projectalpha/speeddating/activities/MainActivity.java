@@ -87,6 +87,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -107,7 +108,6 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
     private UserUploadedPhotos userUploadedPhotos;
     private ParseImageView imagePreview;
-
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private final Activity current = this;
@@ -597,6 +597,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mCurrentUser.setOnline(false);
         Log.d("main111", "onDestroy");
     }
 
@@ -655,7 +656,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 ex.printStackTrace();
             }
         }
-        userPhotoFiles = new ParseFile("photo.jpg", image); //name the file as you wish, parse saves the image as a byte
+        userPhotoFiles = new ParseFile("image.png", image); //name the file as you wish, parse saves the image as a byte
         userPhotoFiles.saveInBackground(new SaveCallback() {
 
             public void done(ParseException e) {
@@ -675,10 +676,12 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
         //textView.setText(stringBuffer.toString());
         //startUpload(stringBuffer.toString());
         //savePhoto(stringBuffer.toString());
+        //_savePost(userPhotoFiles); //upload the image to parse
+
     }
 
 
-    private void savePhoto(String pathToImage) throws IOException {
+ /*   private void savePhoto(String pathToImage) throws IOException {
         byte[] pictureContents = readInFile(pathToImage);
         if (pictureContents != null) {
             final Photo photo = new Photo();
@@ -696,7 +699,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
                 }
             });
         }
-    }
+    }*/
 
 
     private void startUpload(String filePath) {
@@ -706,6 +709,7 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
                 // sign request
                 Map<String, String> uploadParams;
+
                 try {
                     // Parse+Cloudinary: retrieves a Cloudinary signature and upload params using the Parse cloud function.
                     //   see https://github.com/cloudinary/cloudinary_parse
@@ -881,28 +885,27 @@ public class MainActivity extends LocationBaseActivity implements View.OnClickLi
 
         final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
         dialog.setMessage(getString(R.string.saving_loading));
-
-        UserUploadedPhotos userUploadedPhotos = new UserUploadedPhotos();
-        userUploadedPhotos.setPhotoFile(userImageFile);
-
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                 .format(new Date());
 
-        userUploadedPhotos.setTitle(timeStamp);
-
+        UserUploadedPhotos userUploadedPhotos = new UserUploadedPhotos();
+        userUploadedPhotos.setPhotoFile(userImageFile);
+        userUploadedPhotos.creatorID(User.getCurrentUser());
         userUploadedPhotos.setAuthor(User.getCurrentUser());
+        userUploadedPhotos.addAll("allowedUsers", Arrays.asList(User.getCurrentUser().getUsername()));
+        userUploadedPhotos.setTitle(timeStamp);
+        userUploadedPhotos.getApprove(true);
 
 
-       /* imgupload = new ParseObject("ImageTable");
-        //imgupload.put("user_photo", "picturePath");
-        imgupload.put("personPosting", User.getCurrentUser());
-        //imgupload.put("tags", "profileImage");
 
+      /*  imgupload = new ParseObject("ImageTable");
         if (userImageFile != null) {
-            imgupload.put("imageFile", userImageFile);
+            imgupload.put("image", userImageFile);
             // NOTE .. it seems best to "not set it,"
             // if there's NO image file on the post
-        }*/
+        }
+        imgupload.put("username", ParseUser.getCurrentUser().getUsername());*/
+
 
         dialog.show();
         userUploadedPhotos.saveInBackground(new SaveCallback() {

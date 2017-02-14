@@ -344,8 +344,10 @@ public class User extends ParseUser {
     public void setOnline(boolean online){
         if(online){
             put(USER_ONLINE, "yes");
+            saveInBackground();
         } else {
             put(USER_ONLINE, "no");
+            saveInBackground();
         }
     }
 

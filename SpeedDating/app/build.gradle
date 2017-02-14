@@ -25,6 +25,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled  true
     }
     buildTypes {
         release {
@@ -43,6 +44,8 @@ android {
     }
     productFlavors {
     }
+
+    
 }
 
 dependencies {
@@ -117,5 +120,6 @@ dependencies {
     compile 'com.github.esafirm.android-image-picker:imagepicker:1.2.5'
     compile 'com.cloudinary:cloudinary-android:1.4.1'
     compile 'com.yalantis:contextmenu:1.0.7'
+    compile 'com.github.fiskurgit:SimpleViewPager:1.0.10'
     testCompile 'junit:junit:4.12'
 }

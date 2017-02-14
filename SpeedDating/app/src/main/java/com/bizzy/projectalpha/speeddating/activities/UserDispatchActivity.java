@@ -34,9 +34,9 @@ public class UserDispatchActivity extends Activity {
         //check the current parse user info
         if(ParseUser.getCurrentUser() != null){
             // Log the user into the main activity
-            mCurrentUser = (User) User.getCurrentUser();
+           /* mCurrentUser = (User) User.getCurrentUser();
             mCurrentUser.setOnline(true);
-            mCurrentUser.saveInBackground();
+            mCurrentUser.saveInBackground();*/
             startActivity(new Intent(this, MainActivity.class));
         } else{
             // start an intent for this logged out user

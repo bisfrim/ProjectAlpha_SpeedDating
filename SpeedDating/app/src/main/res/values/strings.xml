@@ -66,6 +66,8 @@
 
     <string name="profile_edit">""</string>
 
+    <string name="title_activity_single_image_view">SingleImageView</string>
+
     <!-- Gender -->
 
 
@@ -124,6 +126,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_basic_photo">BasicPhotoActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

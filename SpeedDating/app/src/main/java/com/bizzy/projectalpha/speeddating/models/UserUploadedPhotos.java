@@ -29,7 +29,7 @@ public class UserUploadedPhotos extends ParseObject{
     }
 
     public void setTitle(String title) {
-        put("title", title);
+        put("albumTitle", title);
     }
 
     public ParseUser getAuthor() {
@@ -37,8 +37,18 @@ public class UserUploadedPhotos extends ParseObject{
     }
 
     public void setAuthor(ParseUser user) {
-        put("author", user);
+        put("author", user.getUsername());
     }
+
+
+    public void getApprove(boolean approve){
+        put("approved", approve);
+    }
+
+    public void creatorID(ParseUser user){
+        put("creatorID", user);
+    }
+
 
     public String getRating() {
         return getString("rating");
@@ -60,10 +70,8 @@ public class UserUploadedPhotos extends ParseObject{
                 if (e == null) {
                     //Toast.makeText(MainActivity.this,
                     //"Posting done.", Toast.LENGTH_SHORT).show();
-
                     Log.d(LOG_TAG, "error posting");
                     //MainActivity.this.finish();
-
                 } else {
                     int errCodeSimple = e.getCode();
                     Toast.makeText(mContext, errCodeSimple, Toast.LENGTH_SHORT).show();

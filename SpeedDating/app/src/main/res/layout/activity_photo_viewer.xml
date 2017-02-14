@@ -11,33 +11,43 @@
     <include layout="@layout/toolbar" />
 
 
+    <!--
+        <GridView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_horizontal"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />-->
 
-    <!--<ScrollView
+
+
+    <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+
+
+        <GridView
+            android:id="@+id/listViewPhotosListing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:id="@+id/imageLayout">
-        </LinearLayout>
-    </ScrollView>-->
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            android:clipToPadding="false"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:columnWidth="90dp"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
 
-
-
-    <GridView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:gravity="center_horizontal"
-        android:horizontalSpacing="10dp"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

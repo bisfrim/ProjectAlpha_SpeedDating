@@ -26,6 +26,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.GetCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.Parse;
@@ -84,8 +85,13 @@ public class AuthApplication extends Application {
                 .applicationId(getString(R.string.parse_app_id))
                 .clientKey(getString(R.string.parse_client_key))
                 .server("https://parseapi.back4app.com")
-        .build()
+                .build()
         );
+        ParseACL defaultACL = new ParseACL();
+        defaultACL.setPublicReadAccess(true);
+        defaultACL.setPublicWriteAccess(true);
+        ParseACL.setDefaultACL(defaultACL, true);
+
         Log.i(TAG, "Parse initialized");
 
         Neumob.initialize(getApplicationContext(),"3TKJqupvbFenN8xL" ,new Runnable() {

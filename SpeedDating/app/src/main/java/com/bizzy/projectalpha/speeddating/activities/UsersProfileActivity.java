@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.mikepenz.materialdrawer.Drawer;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
@@ -72,7 +73,7 @@ public class UsersProfileActivity extends AppCompatActivity implements View.OnCl
     @Bind(R.id.toolbar)
     protected Toolbar toolbar;
 
-    private User mUser;
+    public static String mUser, mUser2;
     private ViewPager pager;
     private ViewPagerAdapter adapter;
     private SlidingTabLayout tabs;
@@ -141,6 +142,7 @@ public class UsersProfileActivity extends AppCompatActivity implements View.OnCl
         other_users_image.setOnClickListener(this);
 
         //mUsersList = (List<ParseUser>) ParseUser.getQuery();
+        ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
 
 
@@ -248,7 +250,8 @@ public class UsersProfileActivity extends AppCompatActivity implements View.OnCl
                                 onlineStatus.setImageResource(R.drawable.ic_offline_15_0_alizarin);
                             }
 
-                            mUser = user;
+                            mUser = String.valueOf(user.getNickname());
+                            mUser2 = String.valueOf(user.getUsername());
 
                             mTagLineText.setText(user.getUserBio());
                             mLocationTxt.setText(user.getUserSetLocation());
@@ -291,6 +294,7 @@ public class UsersProfileActivity extends AppCompatActivity implements View.OnCl
         });
     }
 
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
@@ -306,15 +310,17 @@ public class UsersProfileActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    public void showPhoto(){
+   /* public void showPhoto(){
         Intent imageViewerActivity = new Intent(this, ImageViewerActivity.class);
         imageViewerActivity.putExtra(ImageViewerActivity.EXTRA_IMAGE_URL, mUser.getPhotoUrl());
         startActivity(imageViewerActivity);
-    }
+    }*/
 
     public void photoViewer(){
-        Intent startPhotoViewer = new Intent(this, PhotoViewerActivity.class);
-        startActivity(startPhotoViewer);
+        if(ParseUser.getCurrentUser().getUsername() != null){
+            Intent startPhotoViewer = new Intent(getBaseContext(), PhotoViewerActivity.class);
+            startActivity(startPhotoViewer);
+        }
     }
 
 
